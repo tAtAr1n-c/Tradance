@@ -1,0 +1,5 @@
+# Скопируй в db.properties и впиши свои данные
+db.url=jdbc:postgresql://localhost:5432/Semestrovka1
+db.username=postgres
+db.password=
+db.driver=org.postgresql.Driver
