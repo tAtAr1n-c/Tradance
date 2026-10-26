@@ -275,6 +275,19 @@ input:has(+ .field-error) {
     font-size: 13px;
 }
 
+/* сообщения внутри колонки входа — ширина колонки, отступ снизу */
+.auth .flash,
+.auth .form-error {
+    max-width: none;
+    margin: 0 0 16px;
+}
+
+/* «№3» в подписи поля — белым, чтобы номер сразу бросался в глаза */
+.word-num {
+    color: var(--text);
+    font-weight: 600;
+}
+
 /* ===== Секретная фраза: сетка 2 × 5 ===== */
 .phrase-grid {
     display: grid;

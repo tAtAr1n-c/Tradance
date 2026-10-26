@@ -11,18 +11,25 @@
 
 
 <ui:layout title="Вход">
-    <span class="auth-step">Вход · шаг 2 из 2</span>
-    <h1>Проверочные слова</h1>
-    <c:if test="${not empty error}">
-        <div class="form-error">${error}</div>
-    </c:if>
+    <div class="auth">
+        <span class="auth-step">Вход · шаг 2 из 2</span>
+        <h1>Секретная фраза</h1>
+        <p>Введите слова под этими номерами из фразы, которую вы записали при регистрации.</p>
 
-    <form method="post" action="${pageContext.request.contextPath}/login/verify">
-        <c:forEach items="${positions}" var="pos">
-            <label>Слово №${pos}</label>
-            <input name="words" autocomplete="off">
-        </c:forEach>
-        <button type="submit">Войти</button>
-    </form>
+        <c:if test="${not empty error}">
+            <div class="form-error">${error}</div>
+        </c:if>
 
+        <form method="post" action="${pageContext.request.contextPath}/login/verify">
+            <c:forEach items="${positions}" var="pos">
+                <label for="word-${pos}">Слово <span class="word-num">№${pos}</span></label>
+                <input id="word-${pos}" name="words" autocomplete="off" spellcheck="false" autocapitalize="off">
+            </c:forEach>
+            <button type="submit">Войти</button>
+        </form>
+
+        <p class="auth-footer">
+            <a href="${pageContext.request.contextPath}/login">Другой аккаунт</a>
+        </p>
+    </div>
 </ui:layout>
