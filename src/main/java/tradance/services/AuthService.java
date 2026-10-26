@@ -1,16 +1,13 @@
 package tradance.services;
 
-import tradance.dto.LoginForm;
-import tradance.dto.PhraseCheckForm;
-import tradance.dto.SessionUser;
-import tradance.dto.SignUpForm;
+import tradance.dto.*;
 
 import java.util.List;
 
 public interface AuthService {
     List<String> signUp(SignUpForm form);
 
-    List<Integer> startLogin(LoginForm form);
+    PendingLogin startLogin(LoginForm form);
 
     SessionUser finishLogin(Long userId, List<Integer> positions, PhraseCheckForm form);
 //    List<Integer> startRecover(String username);
