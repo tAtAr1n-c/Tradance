@@ -1,0 +1,347 @@
+/* ===== Цвета из макета (тёмная тема) ===== */
+:root {
+    --bg: #0B0D10;        /* фон страницы */
+    --panel: #13161B;     /* шапка, карточки, поля */
+    --field: #1C2027;     /* фон полей ввода и активных пунктов */
+    --border: #232830;    /* рамки и разделители */
+    --field-border: #2B313A; /* рамка поля ввода */
+    --row-line: #1C2027;  /* линии между строками таблиц */
+    --text: #EAECEF;      /* основной текст */
+    --muted: #8C95A3;     /* серый текст: подписи, второстепенное */
+    --accent: #FF8A1E;    /* оранжевый: кнопки, ссылки, активный пункт */
+    --accent-hover: #FFAA55;
+    --buy: #2EBD85;       /* зелёный: покупка */
+    --sell: #F6465D;      /* красный: продажа */
+    --error-text: #FF8C9A;
+}
+
+/* ===== Основа ===== */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: var(--bg);
+    color: var(--text);
+    font-family: "IBM Plex Sans", system-ui, sans-serif;
+    font-size: 14px;
+    font-variant-numeric: tabular-nums; /* цифры одной ширины — колонки чисел ровные */
+}
+
+a {
+    color: var(--accent);
+    text-decoration: none;
+}
+
+a:hover {
+    color: var(--accent-hover);
+}
+
+h1 {
+    margin: 0 0 8px;
+    font-size: 24px;
+    font-weight: 600;
+}
+
+p {
+    margin: 0 0 16px;
+    color: var(--muted);
+    line-height: 1.5;
+}
+
+main {
+    flex-grow: 1;          /* подвал прижат к низу экрана */
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 32px 24px;
+}
+
+/* ===== Шапка с меню (navbar.tag) ===== */
+nav {
+    height: 60px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    padding: 0 24px;
+    background: var(--panel);
+    border-bottom: 1px solid var(--border);
+    font-weight: 500;
+}
+
+nav a {
+    color: var(--muted);
+}
+
+nav a:hover {
+    color: var(--text);
+}
+
+/* логотип слева: значок + название */
+nav .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-right: 8px;
+    color: var(--text);
+    font-size: 19px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+}
+
+/* правая часть шапки прижата к краю */
+.nav-right {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+/* «Регистрация» для гостя — оранжевая, как главная кнопка */
+nav .nav-cta {
+    padding: 8px 14px;
+    background: var(--accent);
+    color: var(--bg);
+    border-radius: 2px;
+    font-weight: 600;
+}
+
+nav .nav-cta:hover {
+    background: var(--accent-hover);
+    color: var(--bg);
+}
+
+/* логин и кружок с первой буквой */
+.nav-user {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text);
+}
+
+.avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+/* ===== Подвал (footer.tag) ===== */
+footer {
+    padding: 20px 24px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 13px;
+    border-top: 1px solid var(--border);
+}
+
+/* ===== Формы ===== */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    max-width: 400px;
+}
+
+label {
+    margin-top: 8px;
+    color: var(--muted);
+    font-size: 13px;
+}
+
+input, select {
+    height: 44px;
+    padding: 0 12px;
+    background: var(--panel);
+    color: var(--text);
+    border: 1px solid var(--field-border);
+    border-radius: 2px;
+    font: inherit;
+    font-size: 15px;
+}
+
+input:focus, select:focus {
+    outline: none;
+    border-color: var(--accent);
+}
+
+button, .btn {
+    margin-top: 14px;
+    height: 44px;
+    padding: 0 16px;
+    background: var(--accent);
+    color: var(--bg);
+    border: 0;
+    border-radius: 2px;
+    font: inherit;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+/* ссылка, которая выглядит как кнопка */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+button:hover, .btn:hover {
+    background: var(--accent-hover);
+    color: var(--bg);
+}
+
+/* ошибка под полем (fieldError.tag) */
+.field-error {
+    color: var(--error-text);
+    font-size: 13px;
+}
+
+/* поле, под которым стоит ошибка, — с красной рамкой */
+input:has(+ .field-error) {
+    border-color: var(--sell);
+}
+
+/* общая ошибка над формой: «Неверный логин или пароль» */
+.form-error {
+    max-width: 400px;
+    margin-bottom: 12px;
+    padding: 10px 12px;
+    background: #2A1519;
+    border: 1px solid #5A2530;
+    color: var(--error-text);
+    font-size: 13px;
+    line-height: 1.45;
+}
+
+/* одноразовое сообщение об успехе (flash.tag) */
+.flash {
+    margin-bottom: 20px;
+    padding: 10px 14px;
+    background: #12251D;
+    border: 1px solid #1E4A37;
+    color: #7FDDB4;
+    font-size: 13px;
+}
+
+/* важное предупреждение: «фраза показывается один раз» */
+.notice {
+    margin: 4px 0 20px;
+    padding: 10px 12px;
+    background: #2A1E10;
+    border: 1px solid #5A3D1C;
+    color: #FFB870;
+    font-size: 13px;
+    line-height: 1.45;
+}
+
+/* ===== Страницы входа и регистрации ===== */
+/* узкая колонка по центру, как в макете */
+.auth {
+    width: 100%;
+    max-width: 400px;
+    margin: 40px auto;
+}
+
+/* фраза из 10 слов — колонка пошире */
+.auth-wide {
+    max-width: 520px;
+}
+
+/* строка над заголовком: «Регистрация · шаг 1 из 2» */
+.auth-step {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--muted);
+    font-size: 12px;
+}
+
+/* кнопка формы во всю ширину колонки */
+.auth form button {
+    width: 100%;
+}
+
+.auth-footer {
+    margin-top: 20px;
+    font-size: 13px;
+}
+
+/* ===== Секретная фраза: сетка 2 × 5 ===== */
+.phrase-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;      /* 2 колонки */
+    grid-template-rows: repeat(5, auto); /* 5 строк */
+    grid-auto-flow: column;              /* 1–5 слева, 6–10 справа */
+    gap: 1px;                            /* сквозь зазор видна рамка — тонкие линии сетки */
+    margin: 0 0 24px;
+    padding: 0;
+    list-style: none;
+    background: var(--border);
+    border: 1px solid var(--border);
+}
+
+.phrase-word {
+    display: flex;
+    align-items: baseline;
+    padding: 12px 14px;
+    background: var(--panel);
+    font-size: 15px;
+    font-weight: 500;
+}
+
+/* номер слова — серый, фиксированной ширины, чтобы слова стояли ровно */
+.phrase-num {
+    width: 28px;
+    color: var(--muted);
+    font-size: 13px;
+    font-weight: 400;
+}
+
+.auth .btn {
+    width: 100%;
+    margin-top: 0;
+}
+
+/* ===== Таблицы (кошельки, заявки, сделки) ===== */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--panel);
+}
+
+th {
+    padding: 14px 16px;
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 400;
+    text-align: left;
+}
+
+td {
+    padding: 14px 16px;
+    border-top: 1px solid var(--row-line);
+}
+
+/* ===== Статусы заявок (statusBadge.tag) ===== */
+/* как в макете: просто цветной текст, без «таблеток» */
+.badge {
+    font-size: 13px;
+}
+
+.badge-open      { color: var(--text); }
+.badge-partial   { color: var(--accent); }
+.badge-filled    { color: var(--buy); }
+.badge-cancelled { color: var(--muted); }
+
+/* ===== Покупка / продажа ===== */
+.buy  { color: var(--buy); }
+.sell { color: var(--sell); }

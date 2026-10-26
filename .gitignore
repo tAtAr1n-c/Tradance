@@ -43,3 +43,6 @@ src/main/resources/db.properties
 .idea/workspace.xml
 .idea/dataSources*
 .idea/dataSources/
+
+# локальные тестовые данные
+*.local.md
