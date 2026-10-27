@@ -16,5 +16,6 @@ public class MarketRow {
     private String name;
     private String iconPath;
     private BigDecimal lastPrice;
+    private String trend;
     private boolean favorite;
 }

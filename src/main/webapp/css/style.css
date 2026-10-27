@@ -496,6 +496,69 @@ main > .page-head:first-child {
     font-weight: 600;
 }
 
+/* ===== Рынок (market.jsp) ===== */
+/* таблица от края до края, как на кошельках */
+.markets {
+    width: calc(100% + 48px);
+    margin: 0 -24px;
+}
+
+.markets th:first-child,
+.markets td:first-child {
+    width: 32px;
+    padding-left: 24px;
+    padding-right: 0;
+}
+
+.markets th:last-child,
+.markets td:last-child {
+    padding-right: 24px;
+}
+
+.markets td {
+    padding-top: 12px;
+    padding-bottom: 12px;
+}
+
+/* звёздочка избранного: пустая серая, закрашенная оранжевая */
+.star {
+    color: #3A414C;
+    font-size: 16px;
+}
+
+.star-on {
+    color: var(--accent);
+}
+
+/* монета: иконка слева, тикер и название в две строки */
+.markets td:nth-child(2) {
+    line-height: 1.4;
+}
+
+.markets td:nth-child(2) .coin-icon {
+    float: left;
+    width: 32px;
+    height: 32px;
+    margin: 2px 12px 0 0;
+    font-size: 14px;
+}
+
+.markets td:nth-child(2) .muted {
+    font-size: 12px;
+}
+
+/* цена, изменение и ссылка — по правому краю */
+.markets th:nth-child(n+3),
+.markets td:nth-child(n+3) {
+    text-align: right;
+}
+
+/* последняя цена — крупно и жирно */
+.markets td:nth-child(3) {
+    font-size: 15px;
+    font-weight: 600;
+}
+
 table {
     width: 100%;
     border-collapse: collapse;

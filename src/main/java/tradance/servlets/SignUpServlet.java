@@ -35,7 +35,6 @@ public class SignUpServlet extends HttpServlet {
                 .passwordRepeat(req.getParameter("passwordRepeat"))
                 .build();
 
-
         try{
             List<String> words = authService.signUp(signUpForm);
             HttpSession session = req.getSession();
