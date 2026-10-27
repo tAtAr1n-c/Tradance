@@ -9,7 +9,7 @@
     <c:set var="digits" value="8"/>
 </c:if>
 
-<fmt:setLocale value="en_US"/>
+<fmt:setLocale value="ru_RU"/>
 
 <c:choose>
     <c:when test="${empty value}">—</c:when>

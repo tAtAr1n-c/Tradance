@@ -6,7 +6,6 @@
 
 <nav>
     <a class="brand" href="${ctx}/market">
-        <%-- логотип: три свечи графика --%>
         <svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true">
             <rect x="3" y="9" width="5" height="12" rx="1" fill="#FF8A1E"/>
             <rect x="5" y="5" width="1" height="18" fill="#FF8A1E"/>
@@ -29,7 +28,6 @@
         <a href="${ctx}/admin/currencies">Админка</a>
     </c:if>
 
-    <%-- правая часть шапки --%>
     <div class="nav-right">
         <c:if test="${empty sessionScope.user}">
             <a href="${ctx}/login">Вход</a>
@@ -38,7 +36,6 @@
 
         <c:if test="${not empty sessionScope.user}">
             <a class="nav-user" href="${ctx}/profile">
-                <%-- первая буква логина: функции JSTL, без вызова Java-методов в шаблоне --%>
                 <span class="avatar">${fn:toUpperCase(fn:substring(sessionScope.user.username, 0, 1))}</span>
                 ${sessionScope.user.username}
             </a>

@@ -56,9 +56,7 @@ p {
 main {
     flex-grow: 1;          /* подвал прижат к низу экрана */
     width: 100%;
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 32px 24px;
+    padding: 24px;         /* как в макете: таблицы на всю ширину, без узкой колонки по центру */
 }
 
 /* ===== Шапка с меню (navbar.tag) ===== */
@@ -324,7 +322,180 @@ input:has(+ .field-error) {
     margin-top: 0;
 }
 
+/* ===== Общие мелочи ===== */
+.muted  { color: var(--muted); }
+.accent { color: var(--accent); }
+.strong { font-weight: 600; }
+
+/* текст только для экранных дикторов (подпись пустого заголовка колонки) */
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+}
+
+.hint, .empty {
+    margin: 14px 0 0;
+    color: var(--muted);
+    font-size: 13px;
+}
+
+/* ===== Монета: иконка + тикер + название (coinIcon.tag) ===== */
+.coin {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.coin-ticker {
+    font-weight: 600;
+}
+
+.coin .muted {
+    font-size: 12px;
+}
+
+.coin-icon {
+    width: 28px;
+    height: 28px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    object-fit: cover;
+    background: var(--border);   /* цвет по умолчанию для новых монет */
+    color: var(--text);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+/* фирменные цвета монет, пока иконка не загружена */
+.coin-icon[data-ticker="USDT"] { background: #26A17B; color: #FFFFFF; }
+.coin-icon[data-ticker="BTC"]  { background: #F7931A; color: var(--bg); }
+.coin-icon[data-ticker="ETH"]  { background: #627EEA; color: #FFFFFF; }
+.coin-icon[data-ticker="TON"]  { background: #0098EA; color: #FFFFFF; }
+.coin-icon[data-ticker="XMR"]  { background: #FF6600; color: var(--bg); }
+.coin-icon[data-ticker="SOL"]  { background: #9945FF; color: #FFFFFF; }
+.coin-icon[data-ticker="BNB"]  { background: #F3BA2F; color: var(--bg); }
+.coin-icon[data-ticker="XRP"]  { background: #9AA4B2; color: var(--bg); }
+.coin-icon[data-ticker="LTC"]  { background: #A6A9AA; color: var(--bg); }
+.coin-icon[data-ticker="DOGE"] { background: #C2A633; color: var(--bg); }
+.coin-icon[data-ticker="TRX"]  { background: #EB0029; color: #FFFFFF; }
+.coin-icon[data-ticker="ADA"]  { background: #2A6BD6; color: #FFFFFF; }
+.coin-icon[data-ticker="DOT"]  { background: #E6007A; color: #FFFFFF; }
+
 /* ===== Таблицы (кошельки, заявки, сделки) ===== */
+/* обёртка: рамка вокруг таблицы и прокрутка, если колонок много */
+.table-wrap {
+    border: 1px solid var(--border);
+    overflow-x: auto;
+}
+
+/* числа — по правому краю, чтобы разряды стояли друг под другом */
+th.num, td.num {
+    text-align: right;
+}
+
+td a {
+    font-size: 13px;
+    font-weight: 500;
+}
+
+/* ===== Заголовок страницы со сводкой (кошельки) ===== */
+/* полоса на всю ширину: заголовок и цифры в одну строку, как в макете */
+.page-head {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 40px;
+    margin: 0 -24px;             /* вылезает за отступ main, чтобы встать от края до края */
+    padding: 20px 24px;
+    background: var(--panel);
+    border-bottom: 1px solid var(--border);
+}
+
+/* если над полосой нет flash-сообщения — прижать её к шапке */
+main > .page-head:first-child {
+    margin-top: -24px;
+}
+
+.page-head h1 {
+    margin: 0;
+    font-size: 20px;
+}
+
+.stat {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.3;
+}
+
+.stat-label {
+    color: var(--muted);
+    font-size: 12px;
+}
+
+.stat-value {
+    font-size: 20px;
+    font-weight: 600;
+}
+
+/* ===== Кошельки (wallets.jsp) ===== */
+/* таблица тоже от края до края, сразу под полосой сводки */
+.wallets {
+    width: calc(100% + 48px);
+    margin: 0 -24px;
+}
+
+.wallets th:first-child,
+.wallets td:first-child {
+    padding-left: 24px;
+}
+
+.wallets th:last-child,
+.wallets td:last-child {
+    padding-right: 24px;
+}
+
+/* строки кошельков посвободнее: выше и с крупной иконкой */
+.wallets td {
+    padding-top: 16px;
+    padding-bottom: 16px;
+    font-size: 15px;
+}
+
+/* иконка слева, тикер и название справа от неё в две строки */
+.wallets td:first-child {
+    line-height: 1.4;
+}
+
+.wallets td:first-child .coin-icon {
+    float: left;
+    width: 36px;
+    height: 36px;
+    margin: 2px 14px 0 0;
+    font-size: 15px;
+}
+
+.wallets td:first-child .muted {
+    font-size: 13px;
+}
+
+/* числовые колонки — по правому краю, разряды друг под другом */
+.wallets th:not(:first-child),
+.wallets td:not(:first-child) {
+    text-align: right;
+}
+
+/* «Всего» — жирным, как в макете */
+.wallets td:nth-child(2) {
+    font-weight: 600;
+}
+
 table {
     width: 100%;
     border-collapse: collapse;
