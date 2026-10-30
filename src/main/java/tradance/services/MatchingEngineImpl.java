@@ -11,8 +11,6 @@ import java.math.RoundingMode;
 import java.sql.Connection;
 import java.util.List;
 
-import static java.lang.Math.*;
-
 
 public class MatchingEngineImpl implements MatchingEngine {
 
@@ -38,7 +36,7 @@ public class MatchingEngineImpl implements MatchingEngine {
 
         Long quoteId = currenciesRepository.findQuote().getId();
         for(Order other : counter){
-            if(newOrder.getRemaining().compareTo(BigDecimal.ZERO) < 0){
+            if(newOrder.getRemaining().compareTo(BigDecimal.ZERO) <= 0){
                 break;
             }
             BigDecimal qty = newOrder.getRemaining().min(other.getRemaining());

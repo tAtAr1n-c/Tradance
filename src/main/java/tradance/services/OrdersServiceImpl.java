@@ -3,9 +3,11 @@ package tradance.services;
 
 import lombok.Synchronized;
 import tradance.dto.OrderBookDto;
+import tradance.dto.OrderBookLevel;
 import tradance.dto.OrderForm;
 import tradance.exceptions.BusinessException;
 import tradance.models.*;
+import tradance.models.Currency;
 import tradance.repository.CurrenciesRepository;
 import tradance.repository.OrdersRepository;
 import tradance.repository.TradesRepository;
@@ -17,10 +19,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 public class OrdersServiceImpl implements OrdersService {
 
@@ -67,7 +66,7 @@ public class OrdersServiceImpl implements OrdersService {
         try {
             amount = new BigDecimal(form.getAmount().trim());
             if (amount.compareTo(BigDecimal.ZERO) <= 0) errors.put("amount", "Количество должно быть больше нуля");
-            else if (amount.scale() > 8) errors.put("price", "Не больше 8 знаков после запятой");
+            else if (amount.scale() > 8) errors.put("amount", "Не больше 8 знаков после запятой");
         } catch (NumberFormatException | NullPointerException e) {
             errors.put("amount", "Введите количество");
         }
@@ -112,18 +111,58 @@ public class OrdersServiceImpl implements OrdersService {
         }
     }
 
+    @Synchronized
     @Override
     public void cancel(Long userId, Long orderId) {
+        if(orderId == null) throw new BusinessException("Заявка не найдена");
+        try(Connection con = dataSource.getConnection()){
+            con.setAutoCommit(false);
 
+            try{
+                Order order = ordersRepository.findById(con, orderId).orElseThrow(() -> new BusinessException("Заявка не найдена"));
+                if(!order.getUserId().equals(userId)) throw new BusinessException("Это не ваша заявка");
+                if(order.getStatus() != OrderStatus.OPEN && order.getStatus() != OrderStatus.PARTIAL) throw new BusinessException("Заявка уже закрыта");
+                Wallet wallet = walletsRepository.findByUserAndCurrency(userId, order.getCurrencyId()).orElseThrow(() -> new BusinessException("Кошелек не найден"));
+
+                if(order.getSide() == OrderSide.BUY){
+                    Wallet usdt = walletsRepository.findOrCreate(con, userId, currenciesRepository.findQuote().getId());
+                    walletsRepository.unlock(con, usdt.getId(), order.getPrice().multiply(order.getRemaining()));
+                }else{
+                    Wallet coin = walletsRepository.findOrCreate(con, userId, order.getCurrencyId());
+                    walletsRepository.unlock(con, coin.getId(), order.getRemaining());
+                }
+
+                ordersRepository.updateFill(con, order.getId(), order.getFilled(), OrderStatus.CANCELLED);
+                con.commit();
+            }catch(SQLException | RuntimeException e){
+                con.rollback();
+                throw e;
+            }finally{
+                con.setAutoCommit(true);
+            }
+        }catch(SQLException e){
+            throw new IllegalStateException("Не удалось подключиться к базе", e);
+        }
     }
 
     @Override
     public OrderBookDto getOrderBook(String ticker) {
-        return null;
+        if(ticker == null || ticker.isBlank()) throw new BusinessException("Тикер пустой");
+        Currency currency = currenciesRepository.findByTicker(ticker.trim().toUpperCase()).orElseThrow(() -> new BusinessException("Монета не найдена"));
+        if(!currency.isActive() || currency.isQuote()) throw new BusinessException("Монета не найдена");
+        List<OrderBookLevel> asks = ordersRepository.findOrderBook(currency.getId(), OrderSide.SELL, 15);
+        Collections.reverse(asks);
+        return OrderBookDto.builder()
+                .bids(ordersRepository.findOrderBook(currency.getId(), OrderSide.BUY, 15))
+                .asks(asks)
+                .lastPrice(tradesRepository.findLastPrice(currency.getId()))
+                .lastTrades(tradesRepository.findLastByCurrency(currency.getId(), 20))
+                .build();
     }
 
     @Override
     public List<Order> findMyOrders(Long userId) {
-        return List.of();
+        if(userId == null) return new ArrayList<Order>();
+        return ordersRepository.findAllByUser(userId);
     }
 }

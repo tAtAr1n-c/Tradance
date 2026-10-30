@@ -111,7 +111,8 @@ public class TradesRepositoryJdbcImpl implements TradesRepository {
     public List<Trade> findAll() {
         List<Trade> trades = new ArrayList<>();
 
-        try (Connection connection = dataSource.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(SQL_FIND_ALL)) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SQL_FIND_ALL)) {
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 while (resultSet.next()) trades.add(mapRow(resultSet));
             }
@@ -123,6 +124,16 @@ public class TradesRepositoryJdbcImpl implements TradesRepository {
 
 
     private Trade mapRow(ResultSet resultSet) throws SQLException {
-        return Trade.builder().id(resultSet.getLong("id")).buyOrderId(resultSet.getLong("buy_order_id")).sellOrderId(resultSet.getLong("sell_order_id")).buyerId(resultSet.getLong("buyer_id")).sellerId(resultSet.getLong("seller_id")).currencyId(resultSet.getLong("currency_id")).price(resultSet.getBigDecimal("price")).amount(resultSet.getBigDecimal("amount")).createdAt(resultSet.getObject("created_at", LocalDateTime.class)).build();
+        return Trade.builder()
+                .id(resultSet.getLong("id"))
+                .buyOrderId(resultSet.getLong("buy_order_id"))
+                .sellOrderId(resultSet.getLong("sell_order_id"))
+                .buyerId(resultSet.getLong("buyer_id"))
+                .sellerId(resultSet.getLong("seller_id"))
+                .currencyId(resultSet.getLong("currency_id"))
+                .price(resultSet.getBigDecimal("price"))
+                .amount(resultSet.getBigDecimal("amount"))
+                .createdAt(resultSet.getObject("created_at", LocalDateTime.class))
+                .build();
     }
 }
