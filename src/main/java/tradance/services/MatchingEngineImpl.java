@@ -1,8 +1,6 @@
 package tradance.services;
 
-import tradance.models.Order;
-import tradance.models.OrderSide;
-import tradance.models.Wallet;
+import tradance.models.*;
 import tradance.repository.CurrenciesRepository;
 import tradance.repository.OrdersRepository;
 import tradance.repository.TradesRepository;
@@ -38,7 +36,7 @@ public class MatchingEngineImpl implements MatchingEngine {
     public void match(Connection con, Order newOrder) {
         List<Order> counter = ordersRepository.findMatching(con, newOrder.getCurrencyId(), newOrder.getSide(), newOrder.getPrice(), newOrder.getUserId());
 
-        Long quote = currenciesRepository.findQuote().getId();
+        Long quoteId = currenciesRepository.findQuote().getId();
         for(Order other : counter){
             if(newOrder.getRemaining().compareTo(BigDecimal.ZERO) < 0){
                 break;
@@ -53,13 +51,46 @@ public class MatchingEngineImpl implements MatchingEngine {
 
 
 
-            Wallet buyerUSDT;
-            Wallet buyerCoin;
-            Wallet sellerCoin;
-            Wallet sellerUSDT;
-            Wallet feeUSDT;
+            Wallet buyerUSDT = walletsRepository.findOrCreate(con, buyer.getUserId(), quoteId);
+            Wallet buyerCoin = walletsRepository.findOrCreate(con, buyer.getUserId(), buyer.getCurrencyId());
+            Wallet sellerCoin = walletsRepository.findOrCreate(con, seller.getUserId(), seller.getCurrencyId());
+            Wallet sellerUSDT = walletsRepository.findOrCreate(con, seller.getUserId(), quoteId);
+            Wallet feeUSDT  = walletsRepository.findOrCreate(con, feeAccountId, quoteId);
 
+            walletsRepository.spendLocked(con, buyerUSDT.getId(), total, buyer.getPrice().multiply(qty));
+            walletsRepository.credit(con, buyerCoin.getId(), qty);
+
+            walletsRepository.spendLocked(con, sellerCoin.getId(), qty, qty);
+            walletsRepository.credit(con, sellerUSDT.getId(), total.subtract(fee));
+
+            walletsRepository.credit(con, feeUSDT.getId(), fee);
+
+            Trade trade = Trade.builder()
+                    .buyOrderId(buyer.getId())
+                    .sellOrderId(seller.getId())
+                    .buyerId(buyer.getUserId())
+                    .sellerId(seller.getUserId())
+                    .currencyId(seller.getCurrencyId())
+                    .price(tradePrice)
+                    .amount(qty)
+                    .build();
+            tradesRepository.save(con, trade);
+
+            applyFill(con, other, qty);
+            applyFill(con, newOrder, qty);
 
         }
+
+    }
+
+
+    private void applyFill(Connection con, Order order, BigDecimal qty) {
+        BigDecimal filled = order.getFilled().add(qty);
+        OrderStatus status = filled.compareTo(order.getAmount()) == 0 ? OrderStatus.FILLED : OrderStatus.PARTIAL;
+
+        ordersRepository.updateFill(con, order.getId(), filled, status);
+
+        order.setFilled(filled);
+        order.setStatus(status);
     }
 }

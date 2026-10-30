@@ -25,7 +25,6 @@ public class RecoveryPhraseServiceImpl implements RecoveryPhraseService {
         this.secureRandom = new SecureRandom();
     }
 
-
     @Override
     public List<String> generate() {
         Set<String> words = new LinkedHashSet<>();
@@ -52,6 +51,7 @@ public class RecoveryPhraseServiceImpl implements RecoveryPhraseService {
     @Override
     public List<Integer> pickPositions() {
         Set<Integer> positions = new TreeSet<>();
+
         while (positions.size() < 3) {
             Integer ind = secureRandom.nextInt(10) + 1;
             positions.add(ind);
