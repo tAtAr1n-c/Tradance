@@ -1,6 +1,7 @@
 package tradance.dto;
 
 import lombok.*;
+import tradance.models.Currency;
 import tradance.models.Trade;
 
 import java.math.BigDecimal;
@@ -17,4 +18,5 @@ public class OrderBookDto {
     private List<OrderBookLevel> asks;
     private BigDecimal lastPrice;
     private List<Trade> lastTrades;
+    private Currency currency;
 }

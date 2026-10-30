@@ -122,7 +122,6 @@ public class OrdersServiceImpl implements OrdersService {
                 Order order = ordersRepository.findById(con, orderId).orElseThrow(() -> new BusinessException("Заявка не найдена"));
                 if(!order.getUserId().equals(userId)) throw new BusinessException("Это не ваша заявка");
                 if(order.getStatus() != OrderStatus.OPEN && order.getStatus() != OrderStatus.PARTIAL) throw new BusinessException("Заявка уже закрыта");
-                Wallet wallet = walletsRepository.findByUserAndCurrency(userId, order.getCurrencyId()).orElseThrow(() -> new BusinessException("Кошелек не найден"));
 
                 if(order.getSide() == OrderSide.BUY){
                     Wallet usdt = walletsRepository.findOrCreate(con, userId, currenciesRepository.findQuote().getId());
@@ -157,6 +156,7 @@ public class OrdersServiceImpl implements OrdersService {
                 .asks(asks)
                 .lastPrice(tradesRepository.findLastPrice(currency.getId()))
                 .lastTrades(tradesRepository.findLastByCurrency(currency.getId(), 20))
+                .currency(currency)
                 .build();
     }
 
