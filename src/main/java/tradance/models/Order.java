@@ -28,5 +28,4 @@ public class Order {
         return amount.subtract(filled);
     }
 
-
 }

@@ -41,6 +41,7 @@ build/
 # локальные настройки с паролем от БД — в репозиторий не кладём
 src/main/resources/db.properties
 .idea/workspace.xml
+.idea/data_source_mapping.xml
 .idea/dataSources*
 .idea/dataSources/
 

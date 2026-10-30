@@ -1,6 +1,7 @@
 package tradance.listeners;
 
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import tradance.models.User;
 import tradance.repository.*;
 import tradance.services.*;
 
@@ -11,6 +12,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Properties;
@@ -75,6 +77,10 @@ public class AppContextListener implements ServletContextListener {
 
 
         String uploadDir = appProp.getProperty("upload.dir");
+        String feeRate = appProp.getProperty("fee.rate");
+        String feeAccount = appProp.getProperty("fee.account");
+
+        User user = usersRepository.findByUsername(feeAccount).orElseThrow(() -> new IllegalStateException("Счёт комиссий не найден: " + feeAccount));
 
 
         RecoveryPhraseService recoveryPhraseService = new RecoveryPhraseServiceImpl(recoveryWordsRepository, wordlist);
@@ -83,7 +89,7 @@ public class AppContextListener implements ServletContextListener {
         WalletService walletService = new WalletServiceImpl(dataSource, walletsRepository, currenciesRepository);
         FileStorageService fileStorageService = new FileStorageServiceImpl(uploadDir);
         CurrenciesService currenciesService = new CurrenciesServiceImpl(currenciesRepository, tradesRepository, fileStorageService);
-        MatchingEngine matchingEngine = new MatchingEngineImpl(ordersRepository, walletsRepository, tradesRepository);
+        MatchingEngine matchingEngine = new MatchingEngineImpl(ordersRepository, walletsRepository, tradesRepository,currenciesRepository , new BigDecimal(feeRate) , user.getId());
         OrdersService ordersService = new OrdersServiceImpl(dataSource, ordersRepository, currenciesRepository, tradesRepository, matchingEngine);
 
 
