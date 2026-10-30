@@ -10,6 +10,7 @@ import tradance.repository.CurrenciesRepository;
 import tradance.repository.OrdersRepository;
 import tradance.repository.TradesRepository;
 import tradance.repository.WalletsRepository;
+import tradance.exceptions.ValidationException;
 
 import javax.sql.DataSource;
 import java.math.BigDecimal;
@@ -43,17 +44,21 @@ public class OrdersServiceImpl implements OrdersService {
     @Override
     public Order place(Long userId, OrderForm form) {
         Map<String, String> errors = new HashMap<>();
+        if (form.getSide() == null || !(form.getSide().equals("BUY") || form.getSide().equals("SELL"))) {
+            throw new BusinessException("Такой стороны сделки нет");
+        }
+        if(form.getCurrency() == null){
+            throw new BusinessException("Такой монеты нет");
+        }
         Optional<Currency> currency = currenciesRepository.findByTicker(form.getCurrency().trim().toUpperCase());
         if(currency.isEmpty() || !currency.get().isActive() || currency.get().isQuote()){
             errors.put("currency", "Монета недоступна");
-        }
-        if(!(form.getSide().equals("BUY") || form.getSide().equals("SELL"))){
-            throw new BusinessException("Такой стороны сделки нет");
         }
         BigDecimal price = null;
         try {
             price = new BigDecimal(form.getPrice().trim());
             if (price.compareTo(BigDecimal.ZERO) <= 0) errors.put("price", "Цена должна быть больше нуля");
+            else if (price.scale() > 8) errors.put("price", "Не больше 8 знаков после запятой");
         } catch (NumberFormatException | NullPointerException e) {
             errors.put("price", "Введите число");
         }
@@ -61,18 +66,20 @@ public class OrdersServiceImpl implements OrdersService {
         BigDecimal amount = null;
         try {
             amount = new BigDecimal(form.getAmount().trim());
-            if (amount.compareTo(BigDecimal.ZERO) <= 0) errors.put("price", "Количество должно быть больше нуля");
+            if (amount.compareTo(BigDecimal.ZERO) <= 0) errors.put("amount", "Количество должно быть больше нуля");
+            else if (amount.scale() > 8) errors.put("price", "Не больше 8 знаков после запятой");
         } catch (NumberFormatException | NullPointerException e) {
             errors.put("amount", "Введите количество");
         }
+        if (!errors.isEmpty()) throw new ValidationException(errors);
         try(Connection con = dataSource.getConnection()){
             con.setAutoCommit(false);
             try{
-                Long walletCurrencyId = (form.getSide().equals(OrderSide.BUY)) ? currenciesRepository.findQuote().getId() : currency.get().getId();
+                Long walletCurrencyId = (OrderSide.valueOf(form.getSide()).equals(OrderSide.BUY)) ? currenciesRepository.findQuote().getId() : currency.get().getId();
                 Wallet wallet = walletsRepository.findOrCreate(con, userId, walletCurrencyId);
                 BigDecimal need = null;
-                if(form.getSide().equals(OrderSide.BUY)){
-                    need = price.multiply(amount).setScale(8, RoundingMode.UP)
+                if(OrderSide.valueOf(form.getSide()).equals(OrderSide.BUY)){
+                    need = price.multiply(amount).setScale(8, RoundingMode.UP);
                 }else{
                     need = amount;
                 }
@@ -83,8 +90,8 @@ public class OrdersServiceImpl implements OrdersService {
                         .userId(userId)
                         .currencyId(currency.get().getId())
                         .side(OrderSide.valueOf(form.getSide()))
-                        .price(new BigDecimal(form.getPrice()))
-                        .amount(new BigDecimal(form.getAmount()))
+                        .price(price)
+                        .amount(amount)
                         .filled(BigDecimal.ZERO)
                         .status(OrderStatus.OPEN)
                         .build();
@@ -92,9 +99,13 @@ public class OrdersServiceImpl implements OrdersService {
                 ordersRepository.save(con, order);
                 matchingEngine.match(con, order);
                 con.commit();
-
-            }catch(RuntimeException e){
-                throw new IllegalStateException("Не удалось найти кошелек пользователя");
+                return order;
+            }catch(SQLException | RuntimeException e){
+                con.rollback();
+                throw e;
+            }
+            finally{
+                con.setAutoCommit(true);
             }
         }catch(SQLException e){
             throw new IllegalStateException("Не удалось подключиться к базе", e);

@@ -68,9 +68,6 @@ public class MatchingEngineImpl implements MatchingEngine {
             Trade trade = Trade.builder()
                     .buyOrderId(buyer.getId())
                     .sellOrderId(seller.getId())
-                    .buyerId(buyer.getUserId())
-                    .sellerId(seller.getUserId())
-                    .currencyId(seller.getCurrencyId())
                     .price(tradePrice)
                     .amount(qty)
                     .build();
