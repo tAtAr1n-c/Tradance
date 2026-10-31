@@ -85,7 +85,7 @@ public class AppContextListener implements ServletContextListener {
 
         RecoveryPhraseService recoveryPhraseService = new RecoveryPhraseServiceImpl(recoveryWordsRepository, wordlist);
         AuthService authService = new AuthServiceImpl(dataSource, usersRepository, walletsRepository, currenciesRepository, recoveryPhraseService);
-        UsersService usersService = new UsersServiceImpl(usersRepository);
+        UsersService usersService = new UsersServiceImpl(dataSource,usersRepository, walletsRepository, currenciesRepository);
         WalletService walletService = new WalletServiceImpl(dataSource, walletsRepository, currenciesRepository);
         FileStorageService fileStorageService = new FileStorageServiceImpl(uploadDir);
         CurrenciesService currenciesService = new CurrenciesServiceImpl(currenciesRepository, tradesRepository, fileStorageService);

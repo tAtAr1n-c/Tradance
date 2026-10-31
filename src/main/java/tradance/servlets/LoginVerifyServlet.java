@@ -61,7 +61,8 @@ public class LoginVerifyServlet extends HttpServlet {
             req.changeSessionId();
             session.setAttribute("user", user);
 
-            resp.sendRedirect(req.getContextPath() + "/wallets");
+            resp.sendRedirect((String) session.getAttribute("redirectAfterLogin"));
+            session.removeAttribute("redirectAfterLogin");
         } catch (BusinessException e) {
             req.setAttribute("error", e.getMessage());
             req.setAttribute("positions", pending.getPositions());
