@@ -165,4 +165,13 @@ public class OrdersServiceImpl implements OrdersService {
         if(userId == null) return new ArrayList<Order>();
         return ordersRepository.findAllByUser(userId);
     }
+
+    @Override
+    public List<Trade> findMyTrades(Long userId) {
+        List<Trade> trade = new ArrayList<>();
+        if(userId == null){
+            return trade;
+        }
+        return tradesRepository.findAllByUser(userId);
+    }
 }
