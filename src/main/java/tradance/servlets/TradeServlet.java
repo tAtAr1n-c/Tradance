@@ -87,7 +87,7 @@ public class TradeServlet extends HttpServlet {
             req.setAttribute("form", orderForm);
             doGet(req, resp);
         } catch (BusinessException e) {
-            session.setAttribute("flash", e.getMessage());
+            session.setAttribute("flashError", e.getMessage());
             resp.sendRedirect(req.getContextPath() + "/trade?currency=" + ticker);
         }
 

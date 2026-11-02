@@ -75,6 +75,35 @@ nav a {
     color: var(--muted);
 }
 
+nav .nav-link {
+    display: flex;
+    align-items: center;
+    align-self: stretch;
+    border-bottom: 2px solid transparent;
+    padding-top: 2px;
+}
+
+nav .nav-link.active {
+    color: var(--text);
+    border-bottom-color: var(--accent);
+}
+
+.nav-balance {
+    display: flex;
+    white-space: nowrap;
+    flex-direction: column;
+    align-items: flex-end;
+    line-height: 1.25;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+}
+
+.nav-balance .stat-label {
+    font-size: 11px;
+    font-weight: 400;
+}
+
 nav a:hover {
     color: var(--text);
 }
@@ -94,6 +123,7 @@ nav .brand {
 /* правая часть шапки прижата к краю */
 .nav-right {
     margin-left: auto;
+    align-self: stretch;
     display: flex;
     align-items: center;
     gap: 20px;
@@ -229,6 +259,21 @@ input:has(+ .field-error) {
     border: 1px solid #1E4A37;
     color: #7FDDB4;
     font-size: 13px;
+}
+
+main > .flash:first-child {
+    margin: -24px -24px 0;
+    border-width: 0 0 1px;
+}
+
+.flash + .pair-bar {
+    margin-top: 0;
+}
+
+.flash-error {
+    background: #2A1418;
+    border-color: #5A1F2A;
+    color: #F6465D;
 }
 
 /* важное предупреждение: «фраза показывается один раз» */
@@ -430,6 +475,7 @@ main > .page-head:first-child {
 
 .stat {
     display: flex;
+    white-space: nowrap;
     flex-direction: column;
     line-height: 1.3;
 }
@@ -559,8 +605,6 @@ main > .page-head:first-child {
     font-weight: 600;
 }
 
-/* ===== Админка: каркас (adminLayout.tag, adminMenu.tag) ===== */
-/* шапка админки: логотип + бейдж ADMIN слева, «На биржу» и «Выход» справа */
 .admin-top {
     height: 60px;
     display: flex;
@@ -606,7 +650,6 @@ main > .page-head:first-child {
     color: var(--text);
 }
 
-/* под шапкой: меню слева, содержимое справа, на всю оставшуюся высоту */
 .admin-shell {
     flex-grow: 1;
     display: flex;
@@ -619,7 +662,6 @@ main > .page-head:first-child {
     border-right: 1px solid var(--border);
 }
 
-/* меню — это <nav>, поэтому сбрасываем стили верхней шапки сайта */
 .admin-menu {
     height: auto;
     flex-direction: column;
@@ -649,11 +691,9 @@ main > .page-head:first-child {
 
 .admin-main {
     flex-grow: 1;
-    min-width: 0;          /* чтобы широкая таблица не распирала колонку */
-    padding: 32px;
+    min-width: 0;              padding: 32px;
 }
 
-/* заголовок в админке — обычная строка, без полосы на всю ширину, как на сайте */
 .admin-main .page-head,
 .admin-main > .page-head:first-child {
     margin: 0 0 16px;
@@ -663,12 +703,10 @@ main > .page-head:first-child {
     border: 0;
 }
 
-/* «13 всего · 12 торгуются» рядом с заголовком */
 .admin-count {
     color: var(--muted);
 }
 
-/* ===== Админка: список слева, форма справа ===== */
 .admin-cols {
     display: grid;
     grid-template-columns: minmax(0, 1fr) 360px;
@@ -676,13 +714,10 @@ main > .page-head:first-child {
     align-items: start;
 }
 
-/* левая ячейка: если таблица не влезает — прокрутка внутри, а не наезд на форму */
 .admin-cols > :first-child {
     overflow-x: auto;
 }
 
-/* узкий экран: форма уходит под таблицу
-   (меню 240 + отступы 64 + таблица ~520 + зазор 24 + форма 360 ≈ 1210px) */
 @media (max-width: 1220px) {
     .admin-cols {
         grid-template-columns: minmax(0, 1fr);
@@ -697,7 +732,6 @@ main > .page-head:first-child {
     font-size: 13px;
 }
 
-/* правая панель с формой «Новая монета» */
 .panel {
     padding: 24px;
     background: var(--panel);
@@ -718,7 +752,6 @@ main > .page-head:first-child {
     background: var(--field);
 }
 
-/* чекбокс с подписью в одну строку */
 .check {
     display: flex;
     align-items: center;
@@ -734,7 +767,6 @@ main > .page-head:first-child {
     cursor: pointer;
 }
 
-/* общее правило для input даёт высоту 44px — у чекбокса она не нужна */
 input[type="checkbox"] {
     width: 18px;
     height: 18px;
@@ -771,18 +803,15 @@ input[type="checkbox"] {
     margin-right: 8px;
 }
 
-/* тикер и название не переносятся на новую строку */
 .admin-table td:first-child {
     white-space: nowrap;
 }
 
-/* тип и статус монеты цветом, как в макете */
 .type-quote { color: var(--accent); }
 .type-base  { color: var(--muted); }
 .state-on   { color: var(--buy); }
 .state-off  { color: var(--muted); }
 
-/* «Изменить» в строке — маленькая кнопка с рамкой, как «Удалить» */
 .admin-table td:last-child a {
     display: inline-flex;
     align-items: center;
@@ -829,7 +858,6 @@ main > .btn {
     color: var(--sell);
 }
 
-/* «Выключить» / «Включить» — обычная кнопка, не красная как «Удалить» */
 .toggle-form button {
     color: var(--text);
 }
@@ -873,7 +901,6 @@ td {
 .buy  { color: var(--buy); }
 .sell { color: var(--sell); }
 
-/* ===== Страница ошибки 404 (error.jsp) ===== */
 .error-page {
     max-width: 520px;
     margin: 96px auto 0;
@@ -909,4 +936,193 @@ td {
 
 .error-links .error-link-muted:hover {
     color: var(--text);
+}
+
+.pair-bar {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 40px;
+    margin: -24px -24px 0;
+    padding: 16px 24px;
+    background: var(--panel);
+    border-bottom: 1px solid var(--border);
+}
+
+.pair-name {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.pair-name b {
+    display: block;
+    font-size: 18px;
+}
+
+.pair-name .muted {
+    font-size: 13px;
+}
+
+.trade-cols {
+    display: grid;
+    grid-template-columns: 320px minmax(0, 1fr) 300px;
+    margin: 0 -24px;
+    border-bottom: 1px solid var(--border);
+}
+
+.book,
+.trade-side {
+    padding: 16px 0;
+    background: var(--panel);
+}
+
+.book {
+    border-right: 1px solid var(--border);
+}
+
+.trade-side {
+    border-left: 1px solid var(--border);
+}
+
+.block-title {
+    padding: 0 16px 12px;
+    font-weight: 600;
+}
+
+.book-table {
+    background: none;
+}
+
+.book-table th,
+.book-table td {
+    padding: 4px 16px;
+    border: 0;
+    font-size: 13px;
+}
+
+.book-table th {
+    font-size: 12px;
+}
+
+.book-mid td {
+    padding: 10px 16px;
+    font-size: 18px;
+    font-weight: 600;
+    border-top: 1px solid var(--row-line);
+    border-bottom: 1px solid var(--row-line);
+}
+
+.book .empty,
+.trade-side .empty {
+    padding: 0 16px;
+}
+
+.trade-forms {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    padding: 24px;
+    align-content: start;
+}
+
+.trade-forms .hint {
+    grid-column: 1 / -1;
+    margin: 0;
+    font-size: 14px;
+}
+
+.order-form {
+    max-width: none;
+}
+
+.order-form-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+}
+
+.order-form-head .muted {
+    font-size: 12px;
+}
+
+.order-form input {
+    background: var(--field);
+}
+
+.order-total {
+    display: flex;
+    justify-content: space-between;
+    margin: 4px 0 12px;
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.order-total span {
+    margin-left: auto;
+    margin-right: 4px;
+    color: var(--text);
+    font-weight: 600;
+}
+
+.btn-buy {
+    background: var(--buy);
+    color: var(--bg);
+}
+
+.btn-buy:hover {
+    background: #4FD49E;
+}
+
+.btn-sell {
+    background: var(--sell);
+    color: #FFFFFF;
+}
+
+.btn-sell:hover {
+    background: #FF6B7D;
+    color: #FFFFFF;
+}
+
+@media (max-width: 1100px) {
+    .trade-cols {
+        grid-template-columns: minmax(0, 1fr);
+    }
+    .trade-forms {
+        grid-template-columns: minmax(0, 1fr);
+    }
+    .book, .trade-side {
+        border: 0;
+    }
+}
+
+.book-row {
+    cursor: pointer;
+}
+
+.book-row:hover td {
+    background: var(--field);
+}
+
+.data-table {
+    width: calc(100% + 48px);
+    margin: 0 -24px;
+}
+
+.data-table th:first-child,
+.data-table td:first-child {
+    padding-left: 24px;
+}
+
+.data-table th:last-child,
+.data-table td:last-child {
+    padding-right: 24px;
+    text-align: right;
+}
+
+.data-table td {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    white-space: nowrap;
 }

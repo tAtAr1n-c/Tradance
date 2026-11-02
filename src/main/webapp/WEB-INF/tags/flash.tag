@@ -5,3 +5,8 @@
     <div class="flash">${flash}</div>
     <c:remove var="flash" scope="session"/>
 </c:if>
+
+<c:if test="${not empty flashError}">
+    <div class="flash flash-error">${flashError}</div>
+    <c:remove var="flashError" scope="session"/>
+</c:if>
