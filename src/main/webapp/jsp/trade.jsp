@@ -45,13 +45,14 @@
         <section class="book">
             <div class="block-title">Стакан</div>
 
-            <table class="book-table">
+            <table class="book-table" id="book" data-ticker="${ticker}" data-ctx="${ctx}">
                 <tr>
                     <th>Цена (USDT)</th>
                     <th class="num">Кол-во (${ticker})</th>
                     <th class="num">Сумма</th>
                 </tr>
 
+                <tbody id="asks">
                 <c:forEach items="${book.asks}" var="lvl">
                     <tr class="book-row" data-price="${lvl.price}" data-side="SELL">
                         <td class="sell"><ui:money value="${lvl.price}"/></td>
@@ -59,11 +60,17 @@
                         <td class="num muted"><ui:money value="${lvl.price * lvl.amount}" digits="2"/></td>
                     </tr>
                 </c:forEach>
+                </tbody>
 
+
+                <tbody id="mid">
                 <tr class="book-mid">
-                    <td colspan="3"><ui:money value="${book.lastPrice}"/></td>
+                    <td colspan="3" id="mid-price"><ui:money value="${book.lastPrice}"/></td>
                 </tr>
+                </tbody>
 
+
+                <tbody id="bids">
                 <c:forEach items="${book.bids}" var="lvl">
                     <tr class="book-row" data-price="${lvl.price}" data-side="BUY">
                         <td class="buy"><ui:money value="${lvl.price}"/></td>
@@ -71,6 +78,8 @@
                         <td class="num muted"><ui:money value="${lvl.price * lvl.amount}" digits="2"/></td>
                     </tr>
                 </c:forEach>
+                </tbody>
+
             </table>
 
             <c:if test="${empty book.asks and empty book.bids}">
@@ -157,4 +166,7 @@
 
     </div>
     <script src="${ctx}/js/trade.js"></script>
+
+
+
 </ui:layout>

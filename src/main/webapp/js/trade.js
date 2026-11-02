@@ -1,12 +1,16 @@
 
-const rows = document.querySelectorAll('.book-row');
+const book = document.getElementById('book');
 
 
-for(let i = 0; i < rows.length; i++){
-    rows[i].addEventListener('click', () =>
-    {
-        let price = rows[i].dataset.price;
-        let side = rows[i].dataset.side;
+
+
+if(book != null){
+    book.addEventListener('click', (e) => {
+        const row = e.target.closest('.book-row');
+
+        if(row == null) return;
+        let price = row.dataset.price;
+        let side = row.dataset.side;
 
         price = String(Number(price));
 
@@ -29,10 +33,7 @@ for(let i = 0; i < rows.length; i++){
         priceInput.value = price;
         updateTotal(side == 'SELL' ? 'buy': 'sell')
         amountInput.focus();
-
-
-
-    });
+    })
 }
 
 const updateTotal = (side) => {
@@ -48,6 +49,27 @@ const updateTotal = (side) => {
     spanTotal.textContent = (isNaN(total)) ? '0' : total.toFixed(2);
 
 }
+
+const fmt = (x) => {
+    return Number(x).toLocaleString('ru-RU', {maximumFractionDigits: 8})
+}
+
+const renderLevels = (tbody, levels, side) => {
+    if(tbody == null) return;
+    const cls = side == 'SELL' ? 'sell' : 'buy';
+    let html = '';
+    for(let i = 0; i < levels.length; i++){
+        let lvl = levels[i];
+        const sum = Number(lvl.price) * Number(lvl.amount);
+        html += '<tr class="book-row" data-price="' + lvl.price + '" data-side="' + side + '">';
+        html += '<td class="' + cls + '">' + fmt(lvl.price) + '</td>';
+       html += '<td class="num">' + fmt(lvl.amount) + '</td>';
+       html += '<td class="num muted">' + sum.toLocaleString('ru-RU', {maximumFractionDigits: 2}) + '</td>';
+       html += '</tr>';
+    }
+    tbody.innerHTML = html;
+}
+
 
 
 const buyElement = document.querySelector('#buy-price');
@@ -81,3 +103,22 @@ if(sellAmount != null) {
 
 updateTotal('buy');
 updateTotal('sell');
+
+
+
+const refreshBook = async () => {
+    const url = book.dataset.ctx + '/api/orderbook?currency=' + book.dataset.ticker;
+    const response = await fetch(url);
+    const json = await response.json();
+
+    if (!json.ok) return;
+    renderLevels(document.getElementById('asks'), json.data.asks, 'SELL');
+    renderLevels(document.getElementById('bids'), json.data.bids, 'BUY');
+
+    const mid = document.getElementById('mid-price');
+    mid.textContent = json.data.lastPrice ? fmt(json.data.lastPrice) : '—';
+}
+
+if (book != null) {
+    setInterval(refreshBook, 3000);
+}
