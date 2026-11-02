@@ -2,6 +2,8 @@ package tradance.servlets;
 
 import tradance.dto.SessionUser;
 import tradance.exceptions.BusinessException;
+import tradance.models.Currency;
+import tradance.services.CurrenciesService;
 import tradance.services.OrdersService;
 
 import javax.servlet.ServletConfig;
@@ -12,21 +14,28 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 @WebServlet({"/orders", "/orders/cancel"})
 public class MyOrderServlet extends HttpServlet {
     private OrdersService ordersService;
-
+    private CurrenciesService currenciesService;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession(false);
         SessionUser user = (session == null) ? null : (SessionUser) session.getAttribute("user");
-        if(user == null){
+        if (user == null) {
             resp.sendRedirect(req.getContextPath() + "/login");
             return;
         }
         req.setAttribute("orders", ordersService.findMyOrders(user.getId()));
+        Map<Long, String> tickers = new HashMap<>();
+        for (Currency currency : currenciesService.findAll()) {
+            tickers.put(currency.getId(), currency.getTicker());
+        }
+        req.setAttribute("tickers", tickers);
 
         req.getRequestDispatcher("/jsp/orders.jsp").forward(req, resp);
     }
@@ -35,18 +44,18 @@ public class MyOrderServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession(false);
         SessionUser user = (session == null) ? null : (SessionUser) session.getAttribute("user");
-        if(user == null){
+        if (user == null) {
             resp.sendError(403);
             return;
         }
 
-        try{
+        try {
             Long orderId = Long.parseLong(req.getParameter("id"));
             ordersService.cancel(user.getId(), orderId);
-            session.setAttribute("flash", "Заказ успешно отменен");
-        }catch(NumberFormatException e){
-            session.setAttribute("flash" , "Заказ не найдена");
-        }catch(BusinessException e){
+            session.setAttribute("flash", "Заявка отменена");
+        } catch (NumberFormatException e) {
+            session.setAttribute("flash", "Заявка не найдена");
+        } catch (BusinessException e) {
             session.setAttribute("flash", e.getMessage());
         }
 
@@ -55,6 +64,7 @@ public class MyOrderServlet extends HttpServlet {
 
     @Override
     public void init(ServletConfig config) throws ServletException {
-        this.ordersService =(OrdersService) config.getServletContext().getAttribute("ordersService");
+        this.ordersService = (OrdersService) config.getServletContext().getAttribute("ordersService");
+        this.currenciesService = (CurrenciesService) config.getServletContext().getAttribute("currenciesService");
     }
 }
