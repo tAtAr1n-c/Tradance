@@ -14,4 +14,5 @@ public interface CurrenciesService {
     void update(Long id, CurrencyForm form);
     void delete(Long id);
     void setActive(Long id, boolean active);
+    boolean toggleFavorite(Long userId, Long currencyId);
 }

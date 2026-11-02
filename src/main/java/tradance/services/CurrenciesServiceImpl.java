@@ -151,6 +151,24 @@ public class CurrenciesServiceImpl implements CurrenciesService {
     }
 
     @Override
+    public boolean toggleFavorite(Long userId, Long currencyId) {
+        if(userId == null) throw new BusinessException("Id пользователя не может быть пустым");
+        if(currencyId == null){
+            throw new BusinessException("Id монеты не может быть пустым");
+        }
+        currenciesRepository.findById(currencyId).orElseThrow(() -> new BusinessException("Монета не найдена"));
+        boolean isFavorite = currenciesRepository.isFavorite(userId, currencyId);
+        if(isFavorite) {
+            currenciesRepository.removeFavorite(userId, currencyId);
+            return false;
+        }
+        else{
+            currenciesRepository.addFavorite(userId, currencyId);
+            return true;
+        }
+    }
+
+    @Override
     public void setActive(Long id, boolean active) {
         if(id == null) throw new BusinessException("id не может быть null");
         Currency currency = currenciesRepository.findById(id).orElseThrow(() -> new BusinessException("Не удалось найти монету и изменить ее"));
