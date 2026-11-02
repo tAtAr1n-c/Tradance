@@ -18,19 +18,19 @@ public class UsersRepositoryJdbcImpl implements UsersRepository {
     private final DataSource dataSource;
 
 
-    private static final String SQL_FIND_BY_USERNAME = "select id, username, email, password_hash, role, is_blocked, avatar_path, created_at from users where username=?";
-    private static final String SQL_FIND_BY_EMAIL = "select id, username, email, password_hash, role, is_blocked, avatar_path, created_at from users where email=?";
-    private static final String SQL_FIND_BY_ID = "select id, username, email, password_hash, role, is_blocked, avatar_path, created_at from users where id=?";
-    private static final String SQL_FIND_ALL = "select id, username, email, password_hash, role, is_blocked, avatar_path, created_at from users";
+    private static final String SQL_FIND_BY_USERNAME = "select id, username, email, password_hash, role, is_blocked, avatar_file_id, created_at from users where username=?";
+    private static final String SQL_FIND_BY_EMAIL = "select id, username, email, password_hash, role, is_blocked, avatar_file_id, created_at from users where email=?";
+    private static final String SQL_FIND_BY_ID = "select id, username, email, password_hash, role, is_blocked, avatar_file_id, created_at from users where id=?";
+    private static final String SQL_FIND_ALL = "select id, username, email, password_hash, role, is_blocked, avatar_file_id, created_at from users";
 
     private static final String SQL_DELETE = "delete from users where id=?";
 
     private static final String SQL_UPDATE_BLOCKED = "update users set is_blocked=? where id=?";
-    private static final String SQL_UPDATE_AVATAR = "update users set avatar_path=? where id=?";
+    private static final String SQL_UPDATE_AVATAR = "update users set avatar_file_id=? where id=?";
     private static final String SQL_UPDATE_PASSWORD = "update users set password_hash=? where id=?";
 
     private static final String SQL_SAVE_USER = "insert into users (username, email, password_hash, role) values (?, ?, ?, ?) returning id";
-    private static final String SQL_UPDATE_USER = "update users set username=?, email=?, role=?, is_blocked=?, avatar_path=? where id=?";
+    private static final String SQL_UPDATE_USER = "update users set username=?, email=?, role=?, is_blocked=?, avatar_file_id=? where id=?";
 
     private static final String SQL_EXISTS_BY_USERNAME = "select exists(select 1 from users where username=?)";
     private static final String SQL_EXISTS_BY_EMAIL = "select exists(select 1 from users where email=?)";
@@ -69,10 +69,10 @@ public class UsersRepositoryJdbcImpl implements UsersRepository {
     }
 
     @Override
-    public void updateAvatar(Long id, String path) {
+    public void updateAvatar(Long id, Long fileId) {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(SQL_UPDATE_AVATAR)) {
-            preparedStatement.setString(1, path);
+            preparedStatement.setObject(1, fileId);
             preparedStatement.setLong(2, id);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
@@ -177,7 +177,7 @@ public class UsersRepositoryJdbcImpl implements UsersRepository {
             preparedStatement.setString(2, entity.getEmail());
             preparedStatement.setString(3, entity.getRole().name());
             preparedStatement.setBoolean(4, entity.isBlocked());
-            preparedStatement.setString(5, entity.getAvatarPath());
+            preparedStatement.setObject(5, entity.getAvatarFileId());
             preparedStatement.setLong(6, entity.getId());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
@@ -204,7 +204,7 @@ public class UsersRepositoryJdbcImpl implements UsersRepository {
                 .passwordHash(rs.getString("password_hash"))
                 .role(Role.valueOf(rs.getString("role")))
                 .blocked(rs.getObject("is_blocked", Boolean.class))
-                .avatarPath(rs.getString("avatar_path"))
+                .avatarFileId(rs.getObject("avatar_file_id", Long.class))
                 .createdAt(rs.getObject("created_at", LocalDateTime.class))
                 .build();
     }

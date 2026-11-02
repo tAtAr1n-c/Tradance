@@ -15,7 +15,7 @@ public interface UsersRepository extends CrudRepository<User> {
 
     void updateBlocked(Long id, boolean blocked);
 
-    void updateAvatar(Long id, String path);
+    void updateAvatar(Long id, Long fileId);
 
     void updatePasswordHash(Long id, String hash);
 

@@ -8,8 +8,8 @@ CREATE TABLE files(
     created_at timestamp not null default now()
 );
 
--- ALTER TABLE users DROP COLUMN avatar_path; чуть позже после рефактора
+ALTER TABLE users DROP COLUMN avatar_path;
 ALTER TABLE users ADD COLUMN avatar_file_id bigint null references files(id) on delete set null;
 
--- ALTER TABLE currencies DROP COLUMN icon_path; чуть позже после рефактора
+ALTER TABLE currencies DROP COLUMN icon_path;
 ALTER TABLE currencies ADD COLUMN icon_file_id bigint null references files(id) on delete set null;

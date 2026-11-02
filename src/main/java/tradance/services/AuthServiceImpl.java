@@ -18,7 +18,6 @@ import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -124,7 +123,7 @@ public class AuthServiceImpl implements AuthService {
                 .id(user.getId())
                 .username(user.getUsername())
                 .role(user.getRole())
-                .avatarPath(user.getAvatarPath())
+                .avatarFileId(user.getAvatarFileId())
                 .build();
     }
 

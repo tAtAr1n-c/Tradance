@@ -15,5 +15,5 @@ public class SessionUser implements Serializable {
     private Long id;
     private String username;
     private Role role;
-    private String avatarPath;
+    private Long avatarFileId;
 }

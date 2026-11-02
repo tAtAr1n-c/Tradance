@@ -21,6 +21,6 @@ public class User {
     private String passwordHash;
     private Role role;
     private boolean blocked;
-    private String avatarPath;
+    private Long avatarFileId;
     private LocalDateTime createdAt;
 }
