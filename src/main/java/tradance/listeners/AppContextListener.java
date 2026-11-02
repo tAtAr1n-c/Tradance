@@ -74,7 +74,7 @@ public class AppContextListener implements ServletContextListener {
         TradesRepository tradesRepository = new TradesRepositoryJdbcImpl(dataSource);
         UsersRepository usersRepository = new UsersRepositoryJdbcImpl(dataSource);
         WalletsRepository walletsRepository = new WalletsRepositoryJdbcImpl(dataSource);
-
+        FilesRepository fileRepository = new FilesRepositoryJdbcImpl(dataSource);
 
         String uploadDir = appProp.getProperty("upload.dir");
         String feeRate = appProp.getProperty("fee.rate");
