@@ -43,7 +43,7 @@
         <c:forEach items="${wallets}" var="w">
             <tr>
                 <td>
-                    <ui:coinIcon ticker="${w.ticker}" iconPath="${w.iconPath}"/>
+                    <ui:coinIcon ticker="${w.ticker}" iconFileId="${w.iconFileId}"/>
                     <b>${w.ticker}</b><br>
                     <span class="muted">${w.name}</span>
                 </td>

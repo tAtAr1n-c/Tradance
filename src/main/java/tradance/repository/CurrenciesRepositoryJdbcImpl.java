@@ -14,16 +14,16 @@ public class CurrenciesRepositoryJdbcImpl implements CurrenciesRepository {
     private final DataSource dataSource;
 
 
-    private static final String SQL_FIND_BY_TICKER = "select id, ticker, name, icon_path, is_quote, is_active from currencies where ticker=?";
-    private static final String SQL_FIND_BY_ID = "select id, ticker, name, icon_path, is_quote, is_active from currencies where id=?";
-    private static final String SQL_FIND_ALL = "select id, ticker, name, icon_path, is_quote, is_active from currencies order by id";
-    private static final String SQL_FIND_ALL_ACTIVE_TRADABLE = "select id, ticker, name, icon_path, is_quote, is_active from currencies where is_active=true and is_quote=false order by ticker";
-    private static final String SQL_FIND_QUOTE = "select id, ticker, name, icon_path, is_quote, is_active from currencies where is_quote=true";
+    private static final String SQL_FIND_BY_TICKER = "select id, ticker, name, icon_file_id, is_quote, is_active from currencies where ticker=?";
+    private static final String SQL_FIND_BY_ID = "select id, ticker, name, icon_file_id, is_quote, is_active from currencies where id=?";
+    private static final String SQL_FIND_ALL = "select id, ticker, name, icon_file_id, is_quote, is_active from currencies order by id";
+    private static final String SQL_FIND_ALL_ACTIVE_TRADABLE = "select id, ticker, name, icon_file_id, is_quote, is_active from currencies where is_active=true and is_quote=false order by ticker";
+    private static final String SQL_FIND_QUOTE = "select id, ticker, name, icon_file_id, is_quote, is_active from currencies where is_quote=true";
 
     private static final String SQL_DELETE = "delete from currencies where id=?";
 
-    private static final String SQL_SAVE_CURRENCY = "insert into currencies (ticker, name, icon_path, is_quote, is_active) values (?, ?, ?, ?, ?) returning id";
-    private static final String SQL_UPDATE_CURRENCY = "update currencies set ticker=?, name=?, icon_path=?, is_quote=?, is_active=? where id=?";
+    private static final String SQL_SAVE_CURRENCY = "insert into currencies (ticker, name, icon_file_id, is_quote, is_active) values (?, ?, ?, ?, ?) returning id";
+    private static final String SQL_UPDATE_CURRENCY = "update currencies set ticker=?, name=?, icon_file_id=?, is_quote=?, is_active=? where id=?";
 
     private static final String SQL_IS_USED = "select exists(select 1 from wallets where currency_id=?) or exists(select 1 from orders where currency_id=?)";
 
@@ -159,7 +159,7 @@ public class CurrenciesRepositoryJdbcImpl implements CurrenciesRepository {
              PreparedStatement preparedStatement = connection.prepareStatement(SQL_SAVE_CURRENCY)) {
             preparedStatement.setString(1, entity.getTicker());
             preparedStatement.setString(2, entity.getName());
-            preparedStatement.setString(3, entity.getIconPath());
+            preparedStatement.setObject(3, entity.getIconFileId());
             preparedStatement.setBoolean(4, entity.isQuote());
             preparedStatement.setBoolean(5, entity.isActive());
 
@@ -180,7 +180,7 @@ public class CurrenciesRepositoryJdbcImpl implements CurrenciesRepository {
              PreparedStatement preparedStatement = connection.prepareStatement(SQL_UPDATE_CURRENCY)) {
             preparedStatement.setString(1, entity.getTicker());
             preparedStatement.setString(2, entity.getName());
-            preparedStatement.setString(3, entity.getIconPath());
+            preparedStatement.setObject(3, entity.getIconFileId());
             preparedStatement.setBoolean(4, entity.isQuote());
             preparedStatement.setBoolean(5, entity.isActive());
             preparedStatement.setLong(6, entity.getId());
@@ -207,7 +207,7 @@ public class CurrenciesRepositoryJdbcImpl implements CurrenciesRepository {
                 .id(rs.getLong("id"))
                 .ticker(rs.getString("ticker"))
                 .name(rs.getString("name"))
-                .iconPath(rs.getString("icon_path"))
+                .iconFileId(rs.getObject("icon_file_id", Long.class))
                 .quote(rs.getBoolean("is_quote"))
                 .active(rs.getBoolean("is_active"))
                 .build();

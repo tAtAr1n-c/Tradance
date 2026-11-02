@@ -35,7 +35,7 @@ public class WalletServiceImpl implements WalletService {
             walletViews.add(WalletView.builder()
                     .ticker(currency.getTicker())
                     .name(currency.getName())
-                    .iconPath(currency.getIconPath())
+                    .iconFileId(currency.getIconFileId())
                     .balance(wallet.getBalance())
                     .locked(wallet.getLocked())
                     .available(wallet.getAvailable())

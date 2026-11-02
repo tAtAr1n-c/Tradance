@@ -13,7 +13,7 @@ import java.math.BigDecimal;
 public class WalletView {
     private String ticker;
     private String name;
-    private String iconPath;
+    private Long iconFileId;
     private BigDecimal balance;
     private BigDecimal locked;
     private BigDecimal available;

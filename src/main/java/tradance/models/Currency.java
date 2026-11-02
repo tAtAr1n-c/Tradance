@@ -13,7 +13,7 @@ public class Currency {
     private Long id;
     private String ticker;
     private String name;
-    private String iconPath;
+    private Long iconFileId;
     private boolean quote;
     private boolean active;
 }

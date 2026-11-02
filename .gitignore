@@ -38,6 +38,7 @@ build/
 ### Mac OS ###
 .DS_Store
 ### Tradance ###
+.idea/sqldialects.xml
 # локальные настройки с паролем от БД — в репозиторий не кладём
 src/main/resources/db.properties
 .idea/workspace.xml

@@ -16,7 +16,7 @@
 
     <section class="pair-bar">
         <div class="pair-name">
-            <ui:coinIcon ticker="${ticker}" iconPath="${currency.iconPath}"/>
+            <ui:coinIcon ticker="${ticker}" iconFileId="${currency.iconFileId}"/>
             <div>
                 <b>${ticker}/USDT</b>
                 <span class="muted">${currency.name}</span>

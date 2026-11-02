@@ -44,7 +44,7 @@
                         </c:choose>
                     </td>
                     <td>
-                        <ui:coinIcon ticker="${m.ticker}" iconPath="${m.iconPath}"/>
+                        <ui:coinIcon ticker="${m.ticker}" iconFileId="${m.iconFileId}"/>
                         <b>${m.ticker}</b><br>
                         <span class="muted">${m.name}</span>
                     </td>

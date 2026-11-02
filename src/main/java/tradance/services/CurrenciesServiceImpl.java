@@ -61,7 +61,7 @@ public class CurrenciesServiceImpl implements CurrenciesService {
                     .currencyId(currency.getId())
                     .ticker(currency.getTicker())
                     .name(currency.getName())
-                    .iconPath(currency.getIconPath())
+                    .iconFileId(currency.getIconFileId())
                     .lastPrice(priceLast)
                     .trend(trend)
                     .favorite(favorites.contains(currency.getId()))
@@ -92,7 +92,7 @@ public class CurrenciesServiceImpl implements CurrenciesService {
         Currency currency = Currency.builder()
                 .ticker(form.getTicker().trim())
                 .name(form.getName())
-                .iconPath(null)
+                .iconFileId(null)
                 .quote(false)
                 .active("on".equals(form.getActive()))
                 .build();
@@ -110,7 +110,7 @@ public class CurrenciesServiceImpl implements CurrenciesService {
                 .id(id)
                 .ticker(form.getTicker().trim())
                 .name(form.getName())
-                .iconPath(curPrev.getIconPath())
+                .iconFileId(curPrev.getIconFileId())
                 .quote(curPrev.isQuote())
                 .active("on".equals(form.getActive()))
                 .build();

@@ -14,7 +14,7 @@ public class MarketRow {
     private Long currencyId;
     private String ticker;
     private String name;
-    private String iconPath;
+    private Long iconFileId;
     private BigDecimal lastPrice;
     private String trend;
     private boolean favorite;
