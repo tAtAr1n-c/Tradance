@@ -14,6 +14,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Properties;
 
@@ -87,7 +88,7 @@ public class AppContextListener implements ServletContextListener {
         AuthService authService = new AuthServiceImpl(dataSource, usersRepository, walletsRepository, currenciesRepository, recoveryPhraseService);
         UsersService usersService = new UsersServiceImpl(dataSource,usersRepository, walletsRepository, currenciesRepository);
         WalletService walletService = new WalletServiceImpl(dataSource, walletsRepository, currenciesRepository);
-        FileStorageService fileStorageService = new FileStorageServiceImpl(uploadDir);
+        FileStorageService fileStorageService = new FileStorageServiceImpl(uploadDir, fileRepository);
         CurrenciesService currenciesService = new CurrenciesServiceImpl(currenciesRepository, tradesRepository, fileStorageService);
         MatchingEngine matchingEngine = new MatchingEngineImpl(ordersRepository, walletsRepository, tradesRepository,currenciesRepository , new BigDecimal(feeRate) , user.getId());
         OrdersService ordersService = new OrdersServiceImpl(dataSource, ordersRepository, currenciesRepository, tradesRepository, walletsRepository, matchingEngine);
