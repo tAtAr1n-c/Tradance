@@ -1223,3 +1223,93 @@ td {
     padding-bottom: 12px;
     white-space: nowrap;
 }
+
+/* ===== Профиль (profile.jsp) ===== */
+img.avatar {
+    object-fit: cover;
+}
+
+.profile {
+    max-width: 900px;
+    margin: 24px auto 0;
+}
+
+.profile-head {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    margin-bottom: 32px;
+}
+
+.avatar.avatar-big {
+    width: 108px;
+    height: 108px;
+    flex-shrink: 0;
+    font-size: 40px;
+}
+
+.profile-head h1 {
+    margin: 0 0 6px;
+    font-size: 30px;
+}
+
+.profile-head .muted {
+    font-size: 16px;
+}
+
+.profile-row {
+    display: grid;
+    grid-template-columns: 240px minmax(0, 1fr);
+    padding: 20px 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.profile-row:first-of-type {
+    border-top: 1px solid var(--border);
+}
+
+.profile-row span:first-child {
+    color: var(--muted);
+}
+
+.profile h2 {
+    margin: 40px 0 16px;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.avatar-form {
+    flex-direction: row;
+    align-items: center;
+    gap: 20px;
+    max-width: none;
+}
+
+.avatar-form label {
+    margin: 0;
+    font-size: 15px;
+}
+
+.avatar-form input[type="file"] {
+    height: auto;
+    padding: 0;
+    background: none;
+    border: 0;
+    color: var(--muted);
+    font-size: 15px;
+}
+
+.avatar-form button {
+    margin-top: 0;
+}
+
+@media (max-width: 700px) {
+    .profile-row {
+        grid-template-columns: 1fr;
+        gap: 4px;
+    }
+    .avatar-form {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}

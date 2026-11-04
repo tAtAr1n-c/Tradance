@@ -50,8 +50,16 @@
             </c:if>
 
             <a class="nav-user nav-link ${path == '/profile' ? 'active' : ''}" href="${ctx}/profile">
-                <span class="avatar">${fn:toUpperCase(fn:substring(sessionScope.user.username, 0, 1))}</span>
-                ${sessionScope.user.username}
+                <c:choose>
+                    <c:when test="${not empty sessionScope.user.avatarFileId}">
+                        <img class="avatar" src="${ctx}/files?id=${sessionScope.user.avatarFileId}" alt="">
+                    </c:when>
+                    <c:otherwise>
+                        <span class="avatar">${fn:toUpperCase(fn:substring(sessionScope.user.username, 0, 1))}</span>
+
+                    </c:otherwise>
+                </c:choose>
+                    ${sessionScope.user.username}
             </a>
             <a class="nav-link" href="${ctx}/logout">Выход</a>
         </c:if>
