@@ -33,7 +33,6 @@ public class UsersServiceImpl implements UsersService{
 
     @Override
     public List<User> findAll() {
-
         return usersRepository.findAll();
     }
 
@@ -45,6 +44,23 @@ public class UsersServiceImpl implements UsersService{
         User user = usersRepository.findById(id).orElseThrow(() -> new BusinessException("Пользователь не найден"));
         usersRepository.updateBlocked(id, blocked);
 
+    }
+
+    @Override
+    public User findById(Long id) {
+        if(id == null) {
+            throw new BusinessException("Пользователь не найден");
+        }
+        return usersRepository.findById(id).orElseThrow(() -> new BusinessException("Пользователь не найден"));
+    }
+
+    @Override
+    public void setAvatar(Long userId, Long fileId) {
+        if(userId == null) {
+            throw new BusinessException("Пользователь не найден");
+        }
+        usersRepository.findById(userId).orElseThrow(() -> new BusinessException("Пользователь не найден"));
+        usersRepository.updateAvatar(userId, fileId);
     }
 
     @Override

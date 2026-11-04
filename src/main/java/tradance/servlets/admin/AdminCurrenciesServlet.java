@@ -11,15 +11,18 @@ import tradance.services.CurrenciesService;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.Part;
 import java.io.IOException;
 import java.util.List;
 
 @WebServlet({"/admin/currencies", "/admin/currencies/new", "/admin/currencies/edit", "/admin/currencies/delete", "/admin/currencies/toggle"})
+@MultipartConfig
 public class AdminCurrenciesServlet extends HttpServlet {
 
     private CurrenciesService currenciesService;
@@ -65,7 +68,18 @@ public class AdminCurrenciesServlet extends HttpServlet {
                     .active(req.getParameter("active"))
                     .build();
             try{
-                currenciesService.update(Long.valueOf(req.getParameter("id")), form);
+                Long id = Long.valueOf(req.getParameter("id"));
+                currenciesService.update(id, form);
+                Part part = req.getPart("icon");
+                if(part != null && part.getSize() > 0){
+                    try{
+                        currenciesService.setIcon(id, part, user.getId());
+                    }catch(BusinessException e){
+                        req.getSession().setAttribute("flashError", e.getMessage());
+                        resp.sendRedirect(req.getContextPath() + "/admin/currencies/edit?id=" + id);
+                        return;
+                    }
+                }
                 req.getSession().setAttribute("flash", "Монета изменена");
                 resp.sendRedirect(req.getContextPath() + "/admin/currencies");
             }catch(ValidationException e){

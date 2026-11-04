@@ -9,6 +9,7 @@ import tradance.models.Trade;
 import tradance.repository.CurrenciesRepository;
 import tradance.repository.TradesRepository;
 
+import javax.servlet.http.Part;
 import java.math.BigDecimal;
 import java.util.*;
 
@@ -87,8 +88,6 @@ public class CurrenciesServiceImpl implements CurrenciesService {
     public void create(CurrencyForm form) {
 
         validate(form, null);
-
-
         Currency currency = Currency.builder()
                 .ticker(form.getTicker().trim())
                 .name(form.getName())
@@ -174,6 +173,15 @@ public class CurrenciesServiceImpl implements CurrenciesService {
         Currency currency = currenciesRepository.findById(id).orElseThrow(() -> new BusinessException("Не удалось найти монету и изменить ее"));
         if(currency.isQuote()) throw new BusinessException("Котировочную валюту выключать нельзя");
         currency.setActive(active);
+        currenciesRepository.update(currency);
+    }
+
+    @Override
+    public void setIcon(Long currencyId, Part part, Long adminId) {
+        if(currencyId == null) throw new BusinessException("Id монеты не может быть пустым");
+        Currency currency = currenciesRepository.findById(currencyId).orElseThrow(() -> new BusinessException("Монета не найдена"));
+        Long fileId = fileStorageService.save(part, adminId);
+        currency.setIconFileId(fileId);
         currenciesRepository.update(currency);
     }
 }

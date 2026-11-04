@@ -4,6 +4,7 @@ import tradance.dto.CurrencyForm;
 import tradance.dto.MarketRow;
 import tradance.models.Currency;
 
+import javax.servlet.http.Part;
 import java.util.List;
 
 public interface CurrenciesService {
@@ -15,4 +16,5 @@ public interface CurrenciesService {
     void delete(Long id);
     void setActive(Long id, boolean active);
     boolean toggleFavorite(Long userId, Long currencyId);
+    void setIcon(Long currencyId, Part part, Long adminId);
 }

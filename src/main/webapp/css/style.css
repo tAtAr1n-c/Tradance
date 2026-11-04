@@ -867,6 +867,103 @@ main > .btn {
     color: var(--text);
 }
 
+/* ===== Админка: редактирование монеты (currency_edit.jsp) ===== */
+.edit-head {
+    margin-bottom: 20px;
+}
+
+.back-link {
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.back-link:hover {
+    color: var(--text);
+}
+
+.edit-head h1 {
+    margin: 8px 0 0;
+}
+
+.edit-form {
+    max-width: 452px;
+}
+
+.icon-preview {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin: 4px 0 6px;
+}
+
+.icon-preview .coin-icon {
+    width: 44px;
+    height: 44px;
+    font-size: 18px;
+}
+
+.icon-preview .muted {
+    font-size: 13px;
+}
+
+.edit-form input[type="file"] {
+    height: auto;
+    padding: 0;
+    background: none;
+    border: 0;
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.edit-form input[type="file"]::file-selector-button {
+    margin-right: 10px;
+    padding: 6px 12px;
+    background: var(--field);
+    color: var(--text);
+    border: 1px solid var(--field-border);
+    border-radius: 2px;
+    font: inherit;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.edit-form input[type="file"]::file-selector-button:hover {
+    border-color: var(--muted);
+}
+
+.edit-form .check {
+    margin-top: 12px;
+}
+
+.form-buttons {
+    display: flex;
+    gap: 12px;
+    margin-top: 18px;
+}
+
+.form-buttons button,
+.form-buttons .btn {
+    margin-top: 0;
+}
+
+.btn-ghost {
+    background: none;
+    color: var(--text);
+    border: 1px solid var(--field-border);
+    font-weight: 500;
+}
+
+.btn-ghost:hover {
+    background: var(--field);
+    color: var(--text);
+}
+
+.edit-hint {
+    max-width: 452px;
+    margin-top: 24px;
+    line-height: 1.55;
+}
+
 table {
     width: 100%;
     border-collapse: collapse;
