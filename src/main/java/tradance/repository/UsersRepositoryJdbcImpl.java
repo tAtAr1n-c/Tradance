@@ -21,7 +21,7 @@ public class UsersRepositoryJdbcImpl implements UsersRepository {
     private static final String SQL_FIND_BY_USERNAME = "select id, username, email, password_hash, role, is_blocked, avatar_file_id, created_at from users where username=?";
     private static final String SQL_FIND_BY_EMAIL = "select id, username, email, password_hash, role, is_blocked, avatar_file_id, created_at from users where email=?";
     private static final String SQL_FIND_BY_ID = "select id, username, email, password_hash, role, is_blocked, avatar_file_id, created_at from users where id=?";
-    private static final String SQL_FIND_ALL = "select id, username, email, password_hash, role, is_blocked, avatar_file_id, created_at from users";
+    private static final String SQL_FIND_ALL = "select id, username, email, password_hash, role, is_blocked, avatar_file_id, created_at from users order by id";
 
     private static final String SQL_DELETE = "delete from users where id=?";
 

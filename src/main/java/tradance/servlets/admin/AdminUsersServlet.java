@@ -40,7 +40,7 @@ public class AdminUsersServlet extends HttpServlet {
                 Long id = Long.parseLong(req.getParameter("id"));
                 boolean blocked = "true".equals(req.getParameter("blocked"));
                 if (id.equals(admin.getId())) {
-                    session.setAttribute("flash", "Нельзя заблокировать себя");
+                    session.setAttribute("flashError", "Нельзя заблокировать себя");
                 } else {
                     usersService.setBlocked(id, blocked);
                     if (blocked) {
@@ -50,20 +50,20 @@ public class AdminUsersServlet extends HttpServlet {
                     }
                 }
             } catch (NumberFormatException e) {
-                session.setAttribute("flash", "Пользователь не найден");
+                session.setAttribute("flashError", "Пользователь не найден");
             } catch (BusinessException e) {
-                session.setAttribute("flash", e.getMessage());
+                session.setAttribute("flashError", e.getMessage());
             }
         } else if (path.equals("/admin/users/deposit")) {
             try {
                 usersService.deposit(Long.parseLong(req.getParameter("userId")), req.getParameter("currency"), req.getParameter("amount"));
                 session.setAttribute("flash", "Баланс пополнен");
             } catch (ValidationException e) {
-                session.setAttribute("flash", String.join(", ", e.getErrors().values()));
+                session.setAttribute("flashError", String.join(", ", e.getErrors().values()));
             } catch (NumberFormatException e) {
-                session.setAttribute("flash", "Пользователь не найден");
+                session.setAttribute("flashError", "Пользователь не найден");
             } catch (BusinessException e) {
-                session.setAttribute("flash", e.getMessage());
+                session.setAttribute("flashError", e.getMessage());
             }
         }
 
