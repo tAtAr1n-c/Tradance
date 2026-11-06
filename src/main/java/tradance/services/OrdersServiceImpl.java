@@ -174,4 +174,14 @@ public class OrdersServiceImpl implements OrdersService {
         }
         return tradesRepository.findAllByUser(userId);
     }
+
+    @Override
+    public List<Order> findAll() {
+        return ordersRepository.findAll();
+    }
+
+    @Override
+    public List<Trade> findAllTrades() {
+        return tradesRepository.findAll();
+    }
 }

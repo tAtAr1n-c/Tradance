@@ -41,7 +41,7 @@
                     <td class="num"><ui:money value="${o.price}"/></td>
                     <td class="num"><ui:money value="${o.amount}"/></td>
                     <td class="num"><ui:money value="${o.filled}"/></td>
-                    <td><ui:statusBadge status="${o.status}"></ui:statusBadge></td>
+                    <td><ui:statusBadge status="${o.status}"/></td>
                     <td>
                         <c:if test="${o.status == 'OPEN' or o.status == 'PARTIAL'}">
                             <form class="inline-form toggle-form" method="post" action="${ctx}/orders/cancel">
