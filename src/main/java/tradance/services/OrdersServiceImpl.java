@@ -2,6 +2,7 @@ package tradance.services;
 
 
 import lombok.Synchronized;
+import tradance.dto.FeeRow;
 import tradance.dto.OrderBookDto;
 import tradance.dto.OrderBookLevel;
 import tradance.dto.OrderForm;
@@ -29,14 +30,15 @@ public class OrdersServiceImpl implements OrdersService {
     private final TradesRepository tradesRepository;
     private final WalletsRepository walletsRepository;
     private final MatchingEngine matchingEngine;
-
-    public OrdersServiceImpl(DataSource dataSource, OrdersRepository ordersRepository, CurrenciesRepository currenciesRepository, TradesRepository tradesRepository,WalletsRepository walletsRepository , MatchingEngine matchingEngine) {
+    private final BigDecimal feeRate;
+    public OrdersServiceImpl(DataSource dataSource, OrdersRepository ordersRepository, CurrenciesRepository currenciesRepository, TradesRepository tradesRepository,WalletsRepository walletsRepository , MatchingEngine matchingEngine, BigDecimal feeRate) {
         this.dataSource = dataSource;
         this.ordersRepository = ordersRepository;
         this.currenciesRepository = currenciesRepository;
         this.tradesRepository = tradesRepository;
         this.walletsRepository = walletsRepository;
         this.matchingEngine = matchingEngine;
+        this.feeRate = feeRate;
     }
 
     @Synchronized
@@ -183,5 +185,14 @@ public class OrdersServiceImpl implements OrdersService {
     @Override
     public List<Trade> findAllTrades() {
         return tradesRepository.findAll();
+    }
+
+    @Override
+    public List<FeeRow> getFeeIncome() {
+        List<FeeRow> rows = tradesRepository.findTurnoverByCurrency();
+        for(FeeRow row : rows){
+            row.setFee(row.getTurnover().multiply(feeRate).setScale(8, RoundingMode.DOWN));
+        }
+        return rows;
     }
 }

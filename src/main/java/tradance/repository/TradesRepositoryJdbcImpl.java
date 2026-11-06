@@ -1,5 +1,6 @@
 package tradance.repository;
 
+import tradance.dto.FeeRow;
 import tradance.models.Trade;
 
 import javax.sql.DataSource;
@@ -29,6 +30,7 @@ public class TradesRepositoryJdbcImpl implements TradesRepository {
 
     private static final String SQL_SAVE = "insert into trades(buy_order_id, sell_order_id, price, amount) values (?, ?, ?, ?)";
 
+    private static final String SQL_FIND_FEEROW = "select bo.currency_id, count(*) as trades_count, sum(t.price * t.amount) as turnover from trades t join orders bo on bo.id = t.buy_order_id group by bo.currency_id order by turnover desc";
     public TradesRepositoryJdbcImpl(DataSource dataSource) {
         this.dataSource = dataSource;
     }
@@ -135,5 +137,25 @@ public class TradesRepositoryJdbcImpl implements TradesRepository {
                 .amount(resultSet.getBigDecimal("amount"))
                 .createdAt(resultSet.getObject("created_at", LocalDateTime.class))
                 .build();
+    }
+
+    @Override
+    public List<FeeRow> findTurnoverByCurrency() {
+        List<FeeRow> feeRows = new ArrayList<>();
+        try(Connection connection = dataSource.getConnection();
+        PreparedStatement preparedStatement = connection.prepareStatement(SQL_FIND_FEEROW)){
+            try(ResultSet resultSet = preparedStatement.executeQuery()){
+                while(resultSet.next()){
+                    feeRows.add(FeeRow.builder()
+                            .currencyId(resultSet.getLong(1))
+                            .tradesCount(resultSet.getLong(2))
+                            .turnover(resultSet.getBigDecimal(3))
+                            .build());
+                }
+            }
+        }catch(SQLException e){
+            throw new IllegalStateException("Не удалось найти комиссии", e);
+        }
+        return feeRows;
     }
 }

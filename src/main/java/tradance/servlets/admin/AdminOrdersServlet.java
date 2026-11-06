@@ -1,5 +1,6 @@
 package tradance.servlets.admin;
 
+import tradance.dto.FeeRow;
 import tradance.models.Currency;
 import tradance.models.User;
 import tradance.models.Trade;
@@ -15,11 +16,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@WebServlet({"/admin/orders", "/admin/trades"})
+@WebServlet({"/admin/orders", "/admin/trades", "/admin/fees"})
 public class AdminOrdersServlet extends HttpServlet {
     private OrdersService ordersService;
     private CurrenciesService currenciesService;
@@ -43,7 +45,14 @@ public class AdminOrdersServlet extends HttpServlet {
             List<Trade> trades = ordersService.findAllTrades();
             req.setAttribute("trades", trades);
             req.getRequestDispatcher("/jsp/admin/trades.jsp").forward(req, resp);
-        }else{
+        }else if(path.equals("/admin/fees")){
+            List<FeeRow> rows = ordersService.getFeeIncome();
+            BigDecimal totalFee = rows.stream().map(FeeRow::getFee).reduce(BigDecimal.ZERO, BigDecimal::add);
+            req.setAttribute("totalFee", totalFee);
+            req.setAttribute("rows", rows);
+            req.getRequestDispatcher("/jsp/admin/fees.jsp").forward(req, resp);
+        }
+        else{
             resp.sendError(404);
         }
 

@@ -91,7 +91,7 @@ public class AppContextListener implements ServletContextListener {
         FileStorageService fileStorageService = new FileStorageServiceImpl(uploadDir, fileRepository);
         CurrenciesService currenciesService = new CurrenciesServiceImpl(currenciesRepository, tradesRepository, fileStorageService);
         MatchingEngine matchingEngine = new MatchingEngineImpl(ordersRepository, walletsRepository, tradesRepository,currenciesRepository , new BigDecimal(feeRate) , user.getId());
-        OrdersService ordersService = new OrdersServiceImpl(dataSource, ordersRepository, currenciesRepository, tradesRepository, walletsRepository, matchingEngine);
+        OrdersService ordersService = new OrdersServiceImpl(dataSource, ordersRepository, currenciesRepository, tradesRepository, walletsRepository, matchingEngine, new BigDecimal(feeRate));
 
 
         sce.getServletContext().setAttribute("authService", authService);

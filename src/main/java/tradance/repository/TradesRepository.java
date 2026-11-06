@@ -1,5 +1,6 @@
 package tradance.repository;
 
+import tradance.dto.FeeRow;
 import tradance.models.Trade;
 
 import java.math.BigDecimal;
@@ -16,5 +17,7 @@ public interface TradesRepository {
     void save(Connection con, Trade trade);
 
     List<Trade> findAll();
+
+    List<FeeRow> findTurnoverByCurrency();
 
 }

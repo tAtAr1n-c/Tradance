@@ -1,5 +1,6 @@
 package tradance.services;
 
+import tradance.dto.FeeRow;
 import tradance.dto.OrderBookDto;
 import tradance.dto.OrderForm;
 import tradance.models.Order;
@@ -15,4 +16,5 @@ public interface OrdersService {
     OrderBookDto getOrderBook(String ticker);
     List<Order> findMyOrders(Long userId);
     List<Trade> findMyTrades(Long userId);
+    List<FeeRow> getFeeIncome();
 }
