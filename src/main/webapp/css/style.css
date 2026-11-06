@@ -576,6 +576,21 @@ main > .page-head:first-child {
     color: var(--accent);
 }
 
+button.star {
+    margin: 0;
+    height: auto;
+    padding: 0;
+    background: none;
+    border: 0;
+    font-size: 18px;
+    line-height: 1;
+}
+
+button.star:hover {
+    background: none;
+    color: var(--accent-hover);
+}
+
 /* монета: иконка слева, тикер и название в две строки */
 .markets td:nth-child(2) {
     line-height: 1.4;

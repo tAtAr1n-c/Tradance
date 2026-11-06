@@ -20,7 +20,7 @@
         <p class="empty">Монет Пока нет</p>
     </c:if>
     <c:if test="${not empty market}">
-        <table class="markets">
+        <table class="markets" id="markets" data-ctx="${pageContext.request.contextPath}">
             <tr>
                 <th></th>
                 <th>Монета</th>
@@ -34,14 +34,20 @@
             <c:forEach items="${market}" var="m">
                 <tr>
                     <td>
-                        <c:choose>
-                            <c:when test="${m.favorite}">
-                                <span class="star star-on">&#9733;</span>
-                            </c:when>
-                            <c:otherwise>
-                                <span class="star">&#9734;</span>
-                            </c:otherwise>
-                        </c:choose>
+                        <c:if test="${not empty sessionScope.user}">
+                            <c:choose>
+                                <c:when test="${m.favorite}">
+                                    <button type="button" class="star star-on" data-id="${m.currencyId}">
+                                        &#9733;
+                                    </button>
+                                </c:when>
+                                <c:otherwise>
+                                    <button type="button" class="star" data-id="${m.currencyId}">
+                                        &#9734;
+                                    </button>
+                                </c:otherwise>
+                            </c:choose>
+                        </c:if>
                     </td>
                     <td>
                         <ui:coinIcon ticker="${m.ticker}" iconFileId="${m.iconFileId}"/>
@@ -75,6 +81,6 @@
         </table>
     </c:if>
 
-
+    <script src="${pageContext.request.contextPath}/js/favorites.js"></script>
 
 </ui:layout>
