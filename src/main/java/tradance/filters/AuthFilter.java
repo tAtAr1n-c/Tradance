@@ -12,7 +12,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 @WebFilter({"/wallets", "/orders", "/orders/*", "/trades", "/profile",
-        "/api/favorites", "/api/orders", "/api/orders/*", "/profile/*"})
+        "/api/favorites", "/profile/*"})
 public class AuthFilter implements Filter {
     private final ObjectMapper objectMapper = new ObjectMapper();
     @Override

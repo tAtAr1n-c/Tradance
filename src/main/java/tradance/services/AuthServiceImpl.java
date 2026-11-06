@@ -127,13 +127,4 @@ public class AuthServiceImpl implements AuthService {
                 .build();
     }
 
-//    @Override
-//    public List<Integer> startRecover(String username) {
-//        return List.of();
-//    }
-//
-//    @Override
-//    public void finishRecover(String username, List<Integer> positions, RecoverForm form) {
-//
-    //}
 }

@@ -97,7 +97,7 @@ public class AdminCurrenciesServlet extends HttpServlet {
                 req.getSession().setAttribute("flash", "Монета удалена");
                 resp.sendRedirect(req.getContextPath() + "/admin/currencies");
             }catch(BusinessException e) {
-                req.getSession().setAttribute("flash", e.getMessage());
+                req.getSession().setAttribute("flashError", e.getMessage());
                 resp.sendRedirect(req.getContextPath() + "/admin/currencies");
             }catch (NumberFormatException e) {
                 resp.sendError(404);
@@ -108,7 +108,7 @@ public class AdminCurrenciesServlet extends HttpServlet {
                 req.getSession().setAttribute("flash", "true".equals(req.getParameter("active")) ? "Монета включена" : "Монета выключена");
                 resp.sendRedirect(req.getContextPath() + "/admin/currencies");
             }catch(BusinessException e){
-                req.getSession().setAttribute("flash", e.getMessage());
+                req.getSession().setAttribute("flashError", e.getMessage());
                 resp.sendRedirect(req.getContextPath() + "/admin/currencies");
             }catch(NumberFormatException e){
                 resp.sendError(404);

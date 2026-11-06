@@ -54,9 +54,9 @@ public class MyOrderServlet extends HttpServlet {
             ordersService.cancel(user.getId(), orderId);
             session.setAttribute("flash", "Заявка отменена");
         } catch (NumberFormatException e) {
-            session.setAttribute("flash", "Заявка не найдена");
+            session.setAttribute("flashError", "Заявка не найдена");
         } catch (BusinessException e) {
-            session.setAttribute("flash", e.getMessage());
+            session.setAttribute("flashError", e.getMessage());
         }
 
         resp.sendRedirect(req.getContextPath() + "/orders");

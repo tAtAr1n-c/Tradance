@@ -10,6 +10,5 @@ public interface AuthService {
     PendingLogin startLogin(LoginForm form);
 
     SessionUser finishLogin(Long userId, List<Integer> positions, PhraseCheckForm form);
-//    List<Integer> startRecover(String username);
-//    void finishRecover(String username, List<Integer> positions, RecoverForm form);
+
 }
