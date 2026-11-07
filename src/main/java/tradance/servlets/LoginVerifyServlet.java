@@ -49,6 +49,7 @@ public class LoginVerifyServlet extends HttpServlet {
             return;
         }
 
+
         String[] words = req.getParameterValues("words");
         PhraseCheckForm form = PhraseCheckForm.builder()
                 .words(words == null ? List.of() : Arrays.asList(words))
@@ -66,9 +67,15 @@ public class LoginVerifyServlet extends HttpServlet {
             if(target == null) resp.sendRedirect(req.getContextPath() + "/market");
             else resp.sendRedirect(target);
 
-
         } catch (BusinessException e) {
-            req.setAttribute("error", e.getMessage());
+            pending.setAttempts(pending.getAttempts() + 1);
+            if (pending.getAttempts() >= 3) {
+                session.removeAttribute("pendingLogin");
+                session.setAttribute("flashError", "Слишком много неверных попыток, войдите заново");
+                resp.sendRedirect(req.getContextPath() + "/login");
+                return;
+            }
+            req.setAttribute("error", e.getMessage() + ", осталось попыток: " + (3 - pending.getAttempts()));
             req.setAttribute("positions", pending.getPositions());
             req.getRequestDispatcher("/jsp/login_verify.jsp").forward(req, resp);
         }

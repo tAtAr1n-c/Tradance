@@ -15,4 +15,5 @@ import java.util.List;
 public class PendingLogin implements Serializable {
     private Long userId;
     private List<Integer> positions;
+    private int attempts;
 }

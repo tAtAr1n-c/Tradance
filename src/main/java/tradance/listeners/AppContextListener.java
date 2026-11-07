@@ -94,6 +94,9 @@ public class AppContextListener implements ServletContextListener {
         OrdersService ordersService = new OrdersServiceImpl(dataSource, ordersRepository, currenciesRepository, tradesRepository, walletsRepository, matchingEngine, new BigDecimal(feeRate));
 
 
+
+        sce.getServletContext().setAttribute("feeRate", new BigDecimal(feeRate));
+
         sce.getServletContext().setAttribute("authService", authService);
         sce.getServletContext().setAttribute("usersService", usersService);
         sce.getServletContext().setAttribute("walletService", walletService);

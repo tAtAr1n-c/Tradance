@@ -30,6 +30,7 @@
             <th class="num">Цена</th>
             <th class="num">Количество</th>
             <th class="num">Сумма</th>
+            <th class="num">Комиссия, USDT</th>
         </tr>
 
         <c:forEach items="${trades}" var="i">
@@ -42,6 +43,17 @@
                 <td class="num"><ui:money value="${i.price}"/></td>
                 <td class="num"><ui:money value="${i.amount}"/></td>
                 <td class="num"><ui:money value="${i.price * i.amount}" digits="2"/></td>
+
+                <td class="num">
+                    <c:choose>
+                        <c:when test="${i.sellerId == sessionScope.user.id}">
+                            <ui:money value="${i.price * i.amount * feeRate}" digits="2"/>
+                        </c:when>
+                        <c:otherwise>
+                            <span class="muted">—</span>
+                        </c:otherwise>
+                    </c:choose>
+                </td>
             </tr>
         </c:forEach>
     </table>
