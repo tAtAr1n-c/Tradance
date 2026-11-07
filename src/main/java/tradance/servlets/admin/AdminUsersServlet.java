@@ -56,7 +56,7 @@ public class AdminUsersServlet extends HttpServlet {
             }
         } else if (path.equals("/admin/users/deposit")) {
             try {
-                usersService.deposit(Long.parseLong(req.getParameter("userId")), req.getParameter("currency"), req.getParameter("amount"));
+                usersService.deposit(Long.parseLong(req.getParameter("userId")), admin.getId(), req.getParameter("currency"), req.getParameter("amount"));
                 session.setAttribute("flash", "Баланс пополнен");
             } catch (ValidationException e) {
                 session.setAttribute("flashError", String.join(", ", e.getErrors().values()));

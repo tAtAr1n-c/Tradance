@@ -15,6 +15,7 @@ import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
+import java.util.Dictionary;
 import java.util.List;
 import java.util.Properties;
 
@@ -76,6 +77,8 @@ public class AppContextListener implements ServletContextListener {
         UsersRepository usersRepository = new UsersRepositoryJdbcImpl(dataSource);
         WalletsRepository walletsRepository = new WalletsRepositoryJdbcImpl(dataSource);
         FilesRepository fileRepository = new FilesRepositoryJdbcImpl(dataSource);
+        DepositsRepository depositsRepository = new DepositsRepositoryJdbcImpl(dataSource);
+
 
         String uploadDir = appProp.getProperty("upload.dir");
         String feeRate = appProp.getProperty("fee.rate");
@@ -86,7 +89,7 @@ public class AppContextListener implements ServletContextListener {
 
         RecoveryPhraseService recoveryPhraseService = new RecoveryPhraseServiceImpl(recoveryWordsRepository, wordlist);
         AuthService authService = new AuthServiceImpl(dataSource, usersRepository, walletsRepository, currenciesRepository, recoveryPhraseService);
-        UsersService usersService = new UsersServiceImpl(dataSource,usersRepository, walletsRepository, currenciesRepository);
+        UsersService usersService = new UsersServiceImpl(dataSource,usersRepository, walletsRepository, currenciesRepository, depositsRepository);
         WalletService walletService = new WalletServiceImpl(dataSource, walletsRepository, currenciesRepository);
         FileStorageService fileStorageService = new FileStorageServiceImpl(uploadDir, fileRepository);
         CurrenciesService currenciesService = new CurrenciesServiceImpl(currenciesRepository, tradesRepository, fileStorageService);

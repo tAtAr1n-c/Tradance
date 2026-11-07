@@ -706,7 +706,13 @@ button.star:hover {
 
 .admin-main {
     flex-grow: 1;
-    min-width: 0;              padding: 32px;
+    min-width: 0;
+    padding: 32px;
+}
+
+.admin-main > .flash:first-child {
+    margin: 0 0 20px;
+    border-width: 1px;
 }
 
 .admin-main .page-head,

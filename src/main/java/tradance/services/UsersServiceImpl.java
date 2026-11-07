@@ -3,9 +3,11 @@ package tradance.services;
 import tradance.exceptions.BusinessException;
 import tradance.exceptions.ValidationException;
 import tradance.models.Currency;
+import tradance.models.Deposit;
 import tradance.models.User;
 import tradance.models.Wallet;
 import tradance.repository.CurrenciesRepository;
+import tradance.repository.DepositsRepository;
 import tradance.repository.UsersRepository;
 import tradance.repository.WalletsRepository;
 
@@ -23,12 +25,14 @@ public class UsersServiceImpl implements UsersService{
     private final UsersRepository usersRepository;
     private final WalletsRepository walletsRepository;
     private final CurrenciesRepository currenciesRepository;
+    private final DepositsRepository depositsRepository;
 
-    public UsersServiceImpl(DataSource dataSource, UsersRepository usersRepository, WalletsRepository walletsRepository, CurrenciesRepository currenciesRepository) {
+    public UsersServiceImpl(DataSource dataSource, UsersRepository usersRepository, WalletsRepository walletsRepository, CurrenciesRepository currenciesRepository, DepositsRepository depositsRepository) {
         this.dataSource = dataSource;
         this.usersRepository = usersRepository;
         this.walletsRepository = walletsRepository;
         this.currenciesRepository = currenciesRepository;
+        this.depositsRepository = depositsRepository;
     }
 
     @Override
@@ -64,7 +68,7 @@ public class UsersServiceImpl implements UsersService{
     }
 
     @Override
-    public void deposit(Long userId, String currencyTicker, String amount) {
+    public void deposit(Long userId, Long adminId,String currencyTicker, String amount) {
         if(userId == null) {
             throw new BusinessException("Пользователь не найден");
         }
@@ -90,6 +94,13 @@ public class UsersServiceImpl implements UsersService{
             try{
                 Wallet wallet = walletsRepository.findOrCreate(connection, userId, currency.getId());
                 walletsRepository.credit(connection, wallet.getId(), value);
+                Deposit deposit = Deposit.builder()
+                        .userId(userId)
+                        .currencyId(currency.getId())
+                        .adminId(adminId)
+                        .amount(value)
+                        .build();
+                depositsRepository.save(connection, deposit);
                 connection.commit();
             }catch(SQLException | RuntimeException e){
                 connection.rollback();
