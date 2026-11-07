@@ -53,7 +53,7 @@
                                     </form>
                                 </c:if>
                                 <c:if test="${not cur.quote}">
-                                    <form class="inline-form" method="post" action="${ctx}/admin/currencies/delete">
+                                    <form class="inline-form" method="post" action="${ctx}/admin/currencies/delete" onsubmit="return confirm('Удалить монету?')">
                                         <input type="hidden" name="id" value="${cur.id}">
                                         <button type="submit">Удалить</button>
                                     </form>

@@ -47,6 +47,6 @@
             <jsp:doBody/>
         </main>
     </div>
-
+    <script src="${pageContext.request.contextPath}/js/forms.js"></script>
 </body>
 </html>

@@ -21,5 +21,6 @@
     </main>
 
     <ui:footer/>
+    <script src="${pageContext.request.contextPath}/js/forms.js"></script>
 </body>
 </html>
