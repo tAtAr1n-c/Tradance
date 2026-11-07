@@ -4,6 +4,8 @@ package tradance.servlets.admin;
 import tradance.dto.SessionUser;
 import tradance.exceptions.BusinessException;
 import tradance.exceptions.ValidationException;
+import tradance.models.Currency;
+import tradance.models.User;
 import tradance.services.CurrenciesService;
 import tradance.services.UsersService;
 
@@ -15,18 +17,31 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.Map;
+import java.util.stream.Collectors;
 
-@WebServlet({"/admin/users", "/admin/users/block", "/admin/users/deposit"})
+@WebServlet({"/admin/users", "/admin/users/block", "/admin/users/deposit", "/admin/deposits"})
 public class AdminUsersServlet extends HttpServlet {
     private UsersService usersService;
     private CurrenciesService currenciesService;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.setAttribute("users", usersService.findAll());
-        req.setAttribute("currencies", currenciesService.findAll());
-
-        req.getRequestDispatcher("/jsp/admin/users.jsp").forward(req, resp);
+        String path = req.getServletPath();
+        if(path.equals("/admin/users")) {
+            req.setAttribute("users", usersService.findAll());
+            req.setAttribute("currencies", currenciesService.findAll());
+            req.getRequestDispatcher("/jsp/admin/users.jsp").forward(req, resp);
+        }else if(path.equals("/admin/deposits")){
+            Map<Long, String> usersMap = usersService.findAll().stream().collect(Collectors.toMap(User::getId, User::getUsername));
+            Map<Long, String> currencyMap = currenciesService.findAll().stream().collect(Collectors.toMap(Currency::getId, Currency::getTicker));
+            req.setAttribute("usersMap", usersMap);
+            req.setAttribute("currencyMap", currencyMap);
+            req.setAttribute("deposits", usersService.findAllDeposits());
+            req.getRequestDispatcher("/jsp/admin/deposits.jsp").forward(req, resp);
+        }else{
+            resp.sendError(404);
+        }
     }
 
     @Override

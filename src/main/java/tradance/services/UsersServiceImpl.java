@@ -112,4 +112,9 @@ public class UsersServiceImpl implements UsersService{
             throw new IllegalStateException("Не удалось подключиться к базе", e);
         }
     }
+
+    @Override
+    public List<Deposit> findAllDeposits() {
+        return depositsRepository.findAll();
+    }
 }
