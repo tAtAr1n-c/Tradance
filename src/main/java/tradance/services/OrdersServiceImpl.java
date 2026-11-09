@@ -127,7 +127,7 @@ public class OrdersServiceImpl implements OrdersService {
 
                 if(order.getSide() == OrderSide.BUY){
                     Wallet usdt = walletsRepository.findOrCreate(con, userId, currenciesRepository.findQuote().getId());
-                    walletsRepository.unlock(con, usdt.getId(), order.getPrice().multiply(order.getRemaining()));
+                    walletsRepository.unlock(con, usdt.getId(), order.getPrice().multiply(order.getRemaining()).min(usdt.getLocked()));
                 }else{
                     Wallet coin = walletsRepository.findOrCreate(con, userId, order.getCurrencyId());
                     walletsRepository.unlock(con, coin.getId(), order.getRemaining());

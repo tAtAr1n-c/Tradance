@@ -55,7 +55,9 @@ public class MatchingEngineImpl implements MatchingEngine {
             Wallet sellerUSDT = walletsRepository.findOrCreate(con, seller.getUserId(), quoteId);
             Wallet feeUSDT  = walletsRepository.findOrCreate(con, feeAccountId, quoteId);
 
-            walletsRepository.spendLocked(con, buyerUSDT.getId(), total, buyer.getPrice().multiply(qty));
+            BigDecimal unlock = buyer.getPrice().multiply(qty).setScale(8, RoundingMode.HALF_UP).min(buyerUSDT.getLocked());
+
+            walletsRepository.spendLocked(con, buyerUSDT.getId(), total, unlock);
             walletsRepository.credit(con, buyerCoin.getId(), qty);
 
             walletsRepository.spendLocked(con, sellerCoin.getId(), qty, qty);
