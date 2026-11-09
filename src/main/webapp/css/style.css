@@ -1334,3 +1334,87 @@ img.avatar {
         align-items: flex-start;
     }
 }
+
+/* ===== Рейтинг (rating.jsp) ===== */
+.rating-top {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+    margin: 24px 0;
+}
+
+.rating-card {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 18px 20px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-top: 2px solid var(--border);
+}
+
+.rating-place-1 { border-top-color: var(--accent); }
+.rating-place-2 { border-top-color: #C9CED6; }
+.rating-place-3 { border-top-color: #B07A4F; }
+
+.rating-place {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--muted);
+}
+
+.rating-place-1 .rating-place { color: var(--accent); }
+.rating-place-2 .rating-place { color: #C9CED6; }
+.rating-place-3 .rating-place { color: #B07A4F; }
+
+.rating-card-head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 15px;
+}
+
+.rating-card-head .avatar {
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
+}
+
+.rating-card-profit {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-weight: 500;
+}
+
+.rating-card-sum {
+    font-size: 22px;
+    font-weight: 600;
+}
+
+.rating-card-note {
+    font-size: 12px;
+}
+
+.rating-user {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.rating-user .avatar {
+    width: 28px;
+    height: 28px;
+    flex-shrink: 0;
+    font-size: 12px;
+}
+
+.rating-me td {
+    background: #161A21;
+}
+
+@media (max-width: 800px) {
+    .rating-top {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}

@@ -1,6 +1,7 @@
 package tradance.listeners;
 
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import tradance.dto.RatingRow;
 import tradance.models.User;
 import tradance.repository.*;
 import tradance.services.*;
@@ -95,7 +96,7 @@ public class AppContextListener implements ServletContextListener {
         CurrenciesService currenciesService = new CurrenciesServiceImpl(currenciesRepository, tradesRepository, fileStorageService);
         MatchingEngine matchingEngine = new MatchingEngineImpl(ordersRepository, walletsRepository, tradesRepository,currenciesRepository , new BigDecimal(feeRate) , user.getId());
         OrdersService ordersService = new OrdersServiceImpl(dataSource, ordersRepository, currenciesRepository, tradesRepository, walletsRepository, matchingEngine, new BigDecimal(feeRate));
-
+        RatingService ratingService = new RatingServiceImpl(usersRepository, walletsRepository, currenciesRepository, tradesRepository, depositsRepository);
 
 
         sce.getServletContext().setAttribute("feeRate", new BigDecimal(feeRate));
@@ -106,8 +107,7 @@ public class AppContextListener implements ServletContextListener {
         sce.getServletContext().setAttribute("fileStorageService", fileStorageService);
         sce.getServletContext().setAttribute("currenciesService", currenciesService);
         sce.getServletContext().setAttribute("ordersService", ordersService);
-
-
+        sce.getServletContext().setAttribute("ratingService", ratingService);
     }
 
     @Override

@@ -23,6 +23,7 @@
     </a>
 
     <a class="nav-link ${path == '/market' ? 'active' : ''}" href="${ctx}/market">Рынок</a>
+    <a class="nav-link ${path == '/rating' ? 'active' : ''}" href="${ctx}/rating">Рейтинг</a>
 
     <c:if test="${not empty sessionScope.user}">
         <a class="nav-link ${path == '/trade' ? 'active' : ''}" href="${ctx}/trade?currency=BTC">Торговля</a>
