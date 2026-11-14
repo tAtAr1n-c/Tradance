@@ -168,5 +168,4 @@
     <script src="${ctx}/js/trade.js"></script>
 
 
-
 </ui:layout>

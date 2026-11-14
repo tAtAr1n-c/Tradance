@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
-@WebFilter({"/market", "/trade", "/wallets", "/orders", "/trades", "/profile", "/rating"})
+@WebFilter({"/market", "/trade", "/wallets", "/orders", "/trades", "/profile", "/rating", "/p2p", "/p2p/deal", "/p2p/deals"})
 public class NavBalanceFilter implements Filter {
 
     private WalletService walletService;

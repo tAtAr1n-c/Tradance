@@ -1,7 +1,6 @@
 package tradance.listeners;
 
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
-import tradance.dto.RatingRow;
 import tradance.models.User;
 import tradance.repository.*;
 import tradance.services.*;
@@ -15,8 +14,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
-import java.util.Dictionary;
 import java.util.List;
 import java.util.Properties;
 
@@ -79,7 +76,9 @@ public class AppContextListener implements ServletContextListener {
         WalletsRepository walletsRepository = new WalletsRepositoryJdbcImpl(dataSource);
         FilesRepository fileRepository = new FilesRepositoryJdbcImpl(dataSource);
         DepositsRepository depositsRepository = new DepositsRepositoryJdbcImpl(dataSource);
-
+        PaymentMethodsRepository paymentMethodsRepository = new PaymentMethodsRepositoryJdbcImpl(dataSource);
+        P2pOffersRepository p2pOffersRepository = new P2pOffersRepositoryJdbcImpl(dataSource);
+        P2pDealsRepository p2pDealsRepository = new P2pDealsRepositoryJdbcImpl(dataSource);
 
         String uploadDir = appProp.getProperty("upload.dir");
         String feeRate = appProp.getProperty("fee.rate");
@@ -96,6 +95,7 @@ public class AppContextListener implements ServletContextListener {
         CurrenciesService currenciesService = new CurrenciesServiceImpl(currenciesRepository, tradesRepository, fileStorageService);
         MatchingEngine matchingEngine = new MatchingEngineImpl(ordersRepository, walletsRepository, tradesRepository,currenciesRepository , new BigDecimal(feeRate) , user.getId());
         OrdersService ordersService = new OrdersServiceImpl(dataSource, ordersRepository, currenciesRepository, tradesRepository, walletsRepository, matchingEngine, new BigDecimal(feeRate));
+        P2pService p2pService = new P2pServiceImpl(dataSource, p2pDealsRepository, p2pOffersRepository, paymentMethodsRepository, walletsRepository, currenciesRepository);
         RatingService ratingService = new RatingServiceImpl(usersRepository, walletsRepository, currenciesRepository, tradesRepository, depositsRepository);
 
 
@@ -107,6 +107,7 @@ public class AppContextListener implements ServletContextListener {
         sce.getServletContext().setAttribute("fileStorageService", fileStorageService);
         sce.getServletContext().setAttribute("currenciesService", currenciesService);
         sce.getServletContext().setAttribute("ordersService", ordersService);
+        sce.getServletContext().setAttribute("p2pService", p2pService);
         sce.getServletContext().setAttribute("ratingService", ratingService);
     }
 
